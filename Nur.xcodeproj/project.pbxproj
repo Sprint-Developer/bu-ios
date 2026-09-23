@@ -1,0 +1,849 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00000000D1000000000000W7 /* BeUmmatiWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000W1 /* BeUmmatiWatchApp.swift */; };
+		00000000D1000000000000W8 /* WatchModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000W2 /* WatchModels.swift */; };
+		00000000D1000000000000W9 /* WatchRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000W3 /* WatchRootView.swift */; };
+		00000000D1000000000000WA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000W5 /* Assets.xcassets */; };
+		00000000D1000000000000WB /* WatchReminders.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000W6 /* WatchReminders.json */; };
+		00000000D1000000000000WC /* Be Ummati Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000W0 /* Be Ummati Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		00000000D1000000000000R2 /* ReminderDestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000R1 /* ReminderDestinationView.swift */; };
+		00000000D1000000000000S2 /* ScholarQuotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000S1 /* ScholarQuotes.swift */; };
+		00000000D1000000000000S4 /* ScholarsQuotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000S3 /* ScholarsQuotesView.swift */; };
+		00000000D1000000000000T2 /* SalahTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000T1 /* SalahTracker.swift */; };
+		00000000D1000000000000T4 /* SalahTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000T3 /* SalahTrackerView.swift */; };
+		00000000D1000000000000T6 /* RelatedVerses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000T5 /* RelatedVerses.swift */; };
+		00000000D1000000000000T8 /* QuranWords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000T7 /* QuranWords.swift */; };
+		00000000D1000000000000TA /* ShareCardViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000T9 /* ShareCardViews.swift */; };
+		00000000D1000000000000TC /* WordByWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000TB /* WordByWordView.swift */; };
+		00000000D1000000000000U2 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000U1 /* ThemeStore.swift */; };
+		00000000D1000000000000H2 /* HadithCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000H1 /* HadithCatalog.json */; };
+		00000000D1000000000000V2 /* ScholarQuotes.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000V1 /* ScholarQuotes.json */; };
+		00000000D1000000000000G4 /* Fraunces-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000G3 /* Fraunces-Regular.ttf */; };
+		00000000D1000000000000G2 /* BeUmmatiTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000G1 /* BeUmmatiTheme.swift */; };
+		00000000D1000000000000F2 /* OfflineCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000F1 /* OfflineCache.swift */; };
+		00000000D1000000000000F4 /* PrayerNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000F3 /* PrayerNotifications.swift */; };
+		00000000D1000000000000F6 /* QiblaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000F5 /* QiblaService.swift */; };
+		00000000D1000000000000F8 /* FeatureViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000F7 /* FeatureViews.swift */; };
+		00000000D1000000000000E1 /* ShareHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000E0 /* ShareHelpers.swift */; };
+		00000000D1000000000000D1 /* ReminderCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000D0 /* ReminderCatalog.swift */; };
+		00000000D1000000000000B1 /* Amiri.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000B0 /* Amiri.ttf */; };
+		00000000D1000000000000GZ2 /* Gulzar-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000GZ1 /* Gulzar-Regular.ttf */; };
+		00000000D1000000000000IS2 /* InstrumentSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000IS1 /* InstrumentSerif-Regular.ttf */; };
+		00000000D1000000000000B3 /* Harmattan.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000B2 /* Harmattan.ttf */; };
+		00000000D1000000000000B5 /* IBMPlexSansArabic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000B4 /* IBMPlexSansArabic.ttf */; };
+		00000000D1000000000000B7 /* IndoPakNastaleeq.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000B6 /* IndoPakNastaleeq.ttf */; };
+		00000000D1000000000000B9 /* Lateef.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000B8 /* Lateef.ttf */; };
+		00000000D1000000000000BB /* MeQuran.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000BA /* MeQuran.ttf */; };
+		00000000D1000000000000BD /* MehrNastaliq.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000BC /* MehrNastaliq.ttf */; };
+		00000000D1000000000000BF /* NotoNaskhArabic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000BE /* NotoNaskhArabic.ttf */; };
+		00000000D1000000000000C1 /* NotoNastaliqUrdu.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000C0 /* NotoNastaliqUrdu.ttf */; };
+		00000000D1000000000000C3 /* ReemKufi.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000C2 /* ReemKufi.ttf */; };
+		00000000D1000000000000C5 /* ScheherazadeNew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000C4 /* ScheherazadeNew.ttf */; };
+		00000000D1000000000000C7 /* UthmanicHafs.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000C6 /* UthmanicHafs.ttf */; };
+		00000000D1000000000000A2 /* ReadingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000A1 /* ReadingSettings.swift */; };
+		00000000D1000000000000A4 /* ReadingSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000A3 /* ReadingSettingsView.swift */; };
+		00000000D100000000000003 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D100000000000002 /* Models.swift */; };
+		00000000D100000000000005 /* HadithAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D100000000000004 /* HadithAPI.swift */; };
+		00000000D100000000000007 /* PrayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D100000000000006 /* PrayerService.swift */; };
+		00000000D100000000000009 /* QuranAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D100000000000008 /* QuranAPI.swift */; };
+		00000000D10000000000000B /* Stores.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000000A /* Stores.swift */; };
+		00000000D10000000000000D /* HadithViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000000C /* HadithViews.swift */; };
+		00000000D10000000000000F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000000E /* HomeView.swift */; };
+		00000000D100000000000011 /* PrayerCalendarViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D100000000000010 /* PrayerCalendarViews.swift */; };
+		00000000D100000000000013 /* QuranViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D100000000000012 /* QuranViews.swift */; };
+		00000000D100000000000015 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D100000000000014 /* RootView.swift */; };
+		00000000D100000000000017 /* SearchNotesViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D100000000000016 /* SearchNotesViews.swift */; };
+		00000000D100000000000019 /* SharedUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D100000000000018 /* SharedUI.swift */; };
+		00000000D10000000000001B /* BeUmmatiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000001A /* BeUmmatiApp.swift */; };
+		00000000D10000000000001D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000001C /* Assets.xcassets */; };
+		00000000D1000000000000L2 /* LibraryCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000L1 /* LibraryCatalog.swift */; };
+		00000000D1000000000000L4 /* TafsirAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000L3 /* TafsirAPI.swift */; };
+		00000000D1000000000000L6 /* LibraryContentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000L5 /* LibraryContentService.swift */; };
+		00000000D10000000000SR02 /* SeriesReminderBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000SR01 /* SeriesReminderBrain.swift */; };
+		00000000D1000000000000L8 /* ReadingLibraryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000L7 /* ReadingLibraryViews.swift */; };
+		00000000D1000000000000LA /* LibraryCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000L9 /* LibraryCatalog.json */; };
+		00000000D10000000000AQ02 /* AlQalamLectures.zip in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000AQ01 /* AlQalamLectures.zip */; };
+		00000000D1000000000000LC /* SahabaStories.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000LB /* SahabaStories.json */; };
+		00000000D10000000000F002 /* seerah-anwar__madinah1-01.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000F001 /* seerah-anwar__madinah1-01.json */; };
+		00000000D10000000000F012 /* seerah-anwar__madinah1-05.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000F011 /* seerah-anwar__madinah1-05.json */; };
+		00000000D10000000000F022 /* seerah-anwar__makkan-01.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000F021 /* seerah-anwar__makkan-01.json */; };
+		00000000D10000000000F032 /* seerah-anwar__makkan-04.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000F031 /* seerah-anwar__makkan-04.json */; };
+		00000000D10000000000F042 /* seerah-anwar__makkan-08.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000F041 /* seerah-anwar__makkan-08.json */; };
+		00000000D10000000000F052 /* seerah-anwar__makkan-16.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000F051 /* seerah-anwar__makkan-16.json */; };
+		00000000D10000000000F062 /* tareekh-ibn-kathir-urdu__v1-c1.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000F061 /* tareekh-ibn-kathir-urdu__v1-c1.json */; };
+		00000000D10000000000F072 /* tareekh-ibn-kathir-urdu__v1-c3.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000F071 /* tareekh-ibn-kathir-urdu__v1-c3.json */; };
+		00000000D10000000000F082 /* tareekh-ibn-kathir-urdu__v3-c1.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000F081 /* tareekh-ibn-kathir-urdu__v3-c1.json */; };
+		00000000D1000000000000P2 /* HisnAlMuslim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000P1 /* HisnAlMuslim.swift */; };
+		00000000D1000000000000P4 /* DuasLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000P3 /* DuasLibraryView.swift */; };
+		00000000D1000000000000P6 /* HisnAlMuslim.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000P5 /* HisnAlMuslim.json */; };
+		00000000D1000000000000Q2 /* ReminderLaneDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000Q1 /* ReminderLaneDetailView.swift */; };
+		00000000D10000000000A002 /* anwar-seerah-madinah-1__mad1-01.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000A001 /* anwar-seerah-madinah-1__mad1-01.json */; };
+		00000000D10000000000A012 /* anwar-seerah-madinah-1__mad1-05.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000A011 /* anwar-seerah-madinah-1__mad1-05.json */; };
+		00000000D10000000000A022 /* anwar-seerah-makkan__makkan-01.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000A021 /* anwar-seerah-makkan__makkan-01.json */; };
+		00000000D10000000000A032 /* anwar-seerah-makkan__makkan-04.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000A031 /* anwar-seerah-makkan__makkan-04.json */; };
+		00000000D10000000000A042 /* anwar-seerah-makkan__makkan-08.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000A041 /* anwar-seerah-makkan__makkan-08.json */; };
+		00000000D10000000000A052 /* anwar-seerah-makkan__makkan-16.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000A051 /* anwar-seerah-makkan__makkan-16.json */; };
+		00000000D1000000000000UP2 /* UrduProseText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000UP1 /* UrduProseText.swift */; };
+		00000000D10000000000LP02 /* LibraryProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000LP01 /* LibraryProgressStore.swift */; };
+		00000000D10000000000AU02 /* LectureAudioCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000AU01 /* LectureAudioCatalog.swift */; };
+		00000000D10000000000AU04 /* LectureAudioCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000AU03 /* LectureAudioCatalog.json */; };
+		00000000D10000000000PV02 /* LecturePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000PV01 /* LecturePlayerView.swift */; };
+		00000000D10000000000AS02 /* LectureAudioSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000AS01 /* LectureAudioSession.swift */; };
+		00000000D10000000000MP02 /* MiniPlayerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000MP01 /* MiniPlayerBar.swift */; };
+		00000000D10000000000DL02 /* LibraryDeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000DL01 /* LibraryDeepLink.swift */; };
+		00000000D10000000000AI02 /* AppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000AI01 /* AppIdentity.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXShellScriptBuildPhase section — Expand bundled Urdu tafsir zip into app Resources */
+		00000000D10000000000TZ01 /* Expand Tafsir Urdu Bundle */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Shared/Resources/TafsirIbnKathirUrdu.zip",
+			);
+			name = "Expand Tafsir Urdu Bundle";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/TafsirUrdu/1.json",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "ZIP=\"${SRCROOT}/Shared/Resources/TafsirIbnKathirUrdu.zip\"\nDEST=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TafsirUrdu\"\nif [ ! -f \"$ZIP\" ]; then\n  echo \"warning: missing $ZIP\"\n  exit 0\nfi\nmkdir -p \"$DEST\"\nunzip -qo \"$ZIP\" -d \"$DEST\"\necho \"Expanded Urdu tafsir → $DEST ($(ls \"$DEST\" | wc -l | tr -d ' ') surahs)\"\n";
+		};
+		00000000D10000000000TZ02 /* Expand Tareekh Urdu Bundle */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Shared/Resources/TareekhIbnKathirUrdu.zip",
+			);
+			name = "Expand Tareekh Urdu Bundle";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/TareekhUrdu/v1-c1.json",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "ZIP=\"${SRCROOT}/Shared/Resources/TareekhIbnKathirUrdu.zip\"\nDEST=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TareekhUrdu\"\nif [ ! -f \"$ZIP\" ]; then\n  echo \"warning: missing $ZIP\"\n  exit 0\nfi\nmkdir -p \"$DEST\"\nunzip -qo \"$ZIP\" -d \"$DEST\"\necho \"Expanded Urdu tareekh → $DEST ($(ls \"$DEST\" | wc -l | tr -d ' ') chapters)\"\n";
+		};
+		00000000D10000000000TZ03 /* Expand Al Qalam Lectures Bundle */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Shared/Resources/AlQalamLectures.zip",
+			);
+			name = "Expand Al Qalam Lectures Bundle";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/Library/anwar-seerah/aq-01.json",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "ZIP=\"${SRCROOT}/Shared/Resources/AlQalamLectures.zip\"\nDEST=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nif [ ! -f \"$ZIP\" ]; then\n  echo \"warning: missing $ZIP\"\n  exit 0\nfi\nmkdir -p \"$DEST\"\nunzip -qo \"$ZIP\" -d \"$DEST\"\necho \"Expanded Al Qalam lectures → $DEST (Library + AlQalam)\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXFileReference section */
+		00000000D1000000000000E0 /* ShareHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShareHelpers.swift"; sourceTree = "<group>"; };
+		00000000D1000000000000D0 /* ReminderCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReminderCatalog.swift"; sourceTree = "<group>"; };
+		00000000D1000000000000B0 /* Amiri.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Amiri.ttf; path = Amiri.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000GZ1 /* Gulzar-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Gulzar-Regular.ttf"; path = "Gulzar-Regular.ttf"; sourceTree = "<group>"; };
+		00000000D1000000000000IS1 /* InstrumentSerif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "InstrumentSerif-Regular.ttf"; path = "InstrumentSerif-Regular.ttf"; sourceTree = "<group>"; };
+		00000000D1000000000000B2 /* Harmattan.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Harmattan.ttf; path = Harmattan.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000B4 /* IBMPlexSansArabic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = IBMPlexSansArabic.ttf; path = IBMPlexSansArabic.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000B6 /* IndoPakNastaleeq.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = IndoPakNastaleeq.ttf; path = IndoPakNastaleeq.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000B8 /* Lateef.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Lateef.ttf; path = Lateef.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000BA /* MeQuran.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MeQuran.ttf; path = MeQuran.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000BC /* MehrNastaliq.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MehrNastaliq.ttf; path = MehrNastaliq.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000BE /* NotoNaskhArabic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = NotoNaskhArabic.ttf; path = NotoNaskhArabic.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000C0 /* NotoNastaliqUrdu.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = NotoNastaliqUrdu.ttf; path = NotoNastaliqUrdu.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000C2 /* ReemKufi.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = ReemKufi.ttf; path = ReemKufi.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000C4 /* ScheherazadeNew.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = ScheherazadeNew.ttf; path = ScheherazadeNew.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000C6 /* UthmanicHafs.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = UthmanicHafs.ttf; path = UthmanicHafs.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000A1 /* ReadingSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReadingSettings.swift"; sourceTree = "<group>"; };
+		00000000D1000000000000A3 /* ReadingSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReadingSettingsView.swift"; sourceTree = "<group>"; };
+		00000000D10000000000001F /* Be Ummati.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Be Ummati.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		00000000D100000000000002 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models.swift"; sourceTree = "<group>"; };
+		00000000D100000000000004 /* HadithAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HadithAPI.swift"; sourceTree = "<group>"; };
+		00000000D100000000000006 /* PrayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PrayerService.swift"; sourceTree = "<group>"; };
+		00000000D100000000000008 /* QuranAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QuranAPI.swift"; sourceTree = "<group>"; };
+		00000000D10000000000000A /* Stores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Stores.swift"; sourceTree = "<group>"; };
+		00000000D10000000000SR01 /* SeriesReminderBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SeriesReminderBrain.swift"; sourceTree = "<group>"; };
+		00000000D10000000000000C /* HadithViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HadithViews.swift"; sourceTree = "<group>"; };
+		00000000D10000000000000E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeView.swift"; sourceTree = "<group>"; };
+		00000000D100000000000010 /* PrayerCalendarViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PrayerCalendarViews.swift"; sourceTree = "<group>"; };
+		00000000D100000000000012 /* QuranViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QuranViews.swift"; sourceTree = "<group>"; };
+		00000000D100000000000014 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootView.swift"; sourceTree = "<group>"; };
+		00000000D100000000000016 /* SearchNotesViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchNotesViews.swift"; sourceTree = "<group>"; };
+		00000000D100000000000018 /* SharedUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SharedUI.swift"; sourceTree = "<group>"; };
+		00000000D10000000000001A /* BeUmmatiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BeUmmatiApp.swift"; sourceTree = "<group>"; };
+		00000000D10000000000001C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		00000000D10000000000001E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		00000000D1000000000000F1 /* OfflineCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineCache.swift; sourceTree = "<group>"; };
+		00000000D1000000000000F3 /* PrayerNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerNotifications.swift; sourceTree = "<group>"; };
+		00000000D1000000000000F5 /* QiblaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiblaService.swift; sourceTree = "<group>"; };
+		00000000D1000000000000F7 /* FeatureViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureViews.swift; sourceTree = "<group>"; };
+		00000000D1000000000000G1 /* BeUmmatiTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeUmmatiTheme.swift; sourceTree = "<group>"; };
+		00000000D1000000000000G3 /* Fraunces-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Fraunces-Regular.ttf; path = Fraunces-Regular.ttf; sourceTree = "<group>"; };
+		00000000D1000000000000H1 /* HadithCatalog.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HadithCatalog.json; sourceTree = "<group>"; };
+		00000000D1000000000000V1 /* ScholarQuotes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ScholarQuotes.json; sourceTree = "<group>"; };
+		00000000D1000000000000R1 /* ReminderDestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderDestinationView.swift; sourceTree = "<group>"; };
+		00000000D1000000000000S1 /* ScholarQuotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScholarQuotes.swift; sourceTree = "<group>"; };
+		00000000D1000000000000S3 /* ScholarsQuotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScholarsQuotesView.swift; sourceTree = "<group>"; };
+		00000000D1000000000000T1 /* SalahTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalahTracker.swift; sourceTree = "<group>"; };
+		00000000D1000000000000T3 /* SalahTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalahTrackerView.swift; sourceTree = "<group>"; };
+		00000000D1000000000000T5 /* RelatedVerses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedVerses.swift; sourceTree = "<group>"; };
+		00000000D1000000000000T7 /* QuranWords.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranWords.swift; sourceTree = "<group>"; };
+		00000000D1000000000000T9 /* ShareCardViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCardViews.swift; sourceTree = "<group>"; };
+		00000000D1000000000000TB /* WordByWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordByWordView.swift; sourceTree = "<group>"; };
+		00000000D1000000000000U1 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
+		00000000D1000000000000W0 /* Be Ummati Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Be Ummati Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		00000000D1000000000000W1 /* BeUmmatiWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeUmmatiWatchApp.swift; sourceTree = "<group>"; };
+		00000000D1000000000000W2 /* WatchModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchModels.swift; sourceTree = "<group>"; };
+		00000000D1000000000000W3 /* WatchRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRootView.swift; sourceTree = "<group>"; };
+		00000000D1000000000000W4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		00000000D1000000000000W5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		00000000D1000000000000W6 /* WatchReminders.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = WatchReminders.json; sourceTree = "<group>"; };
+		00000000D1000000000000L1 /* LibraryCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryCatalog.swift"; sourceTree = "<group>"; };
+		00000000D1000000000000L3 /* TafsirAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TafsirAPI.swift"; sourceTree = "<group>"; };
+		00000000D1000000000000L5 /* LibraryContentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryContentService.swift"; sourceTree = "<group>"; };
+		00000000D1000000000000L7 /* ReadingLibraryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReadingLibraryViews.swift"; sourceTree = "<group>"; };
+		00000000D1000000000000L9 /* LibraryCatalog.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "LibraryCatalog.json"; sourceTree = "<group>"; };
+		00000000D10000000000AQ01 /* AlQalamLectures.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = AlQalamLectures.zip; sourceTree = "<group>"; };
+		00000000D1000000000000LB /* SahabaStories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "SahabaStories.json"; sourceTree = "<group>"; };
+		00000000D10000000000F001 /* seerah-anwar__madinah1-01.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "seerah-anwar__madinah1-01.json"; sourceTree = "<group>"; };
+		00000000D10000000000F011 /* seerah-anwar__madinah1-05.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "seerah-anwar__madinah1-05.json"; sourceTree = "<group>"; };
+		00000000D10000000000F021 /* seerah-anwar__makkan-01.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "seerah-anwar__makkan-01.json"; sourceTree = "<group>"; };
+		00000000D10000000000F031 /* seerah-anwar__makkan-04.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "seerah-anwar__makkan-04.json"; sourceTree = "<group>"; };
+		00000000D10000000000F041 /* seerah-anwar__makkan-08.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "seerah-anwar__makkan-08.json"; sourceTree = "<group>"; };
+		00000000D10000000000F051 /* seerah-anwar__makkan-16.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "seerah-anwar__makkan-16.json"; sourceTree = "<group>"; };
+		00000000D10000000000F061 /* tareekh-ibn-kathir-urdu__v1-c1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "tareekh-ibn-kathir-urdu__v1-c1.json"; sourceTree = "<group>"; };
+		00000000D10000000000F071 /* tareekh-ibn-kathir-urdu__v1-c3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "tareekh-ibn-kathir-urdu__v1-c3.json"; sourceTree = "<group>"; };
+		00000000D10000000000F081 /* tareekh-ibn-kathir-urdu__v3-c1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "tareekh-ibn-kathir-urdu__v3-c1.json"; sourceTree = "<group>"; };
+		00000000D1000000000000P1 /* HisnAlMuslim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HisnAlMuslim.swift"; sourceTree = "<group>"; };
+		00000000D1000000000000P3 /* DuasLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DuasLibraryView.swift"; sourceTree = "<group>"; };
+		00000000D1000000000000P5 /* HisnAlMuslim.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "HisnAlMuslim.json"; sourceTree = "<group>"; };
+		00000000D1000000000000Q1 /* ReminderLaneDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReminderLaneDetailView.swift"; sourceTree = "<group>"; };
+		00000000D10000000000A001 /* anwar-seerah-madinah-1__mad1-01.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "anwar-seerah-madinah-1__mad1-01.json"; sourceTree = "<group>"; };
+		00000000D10000000000A011 /* anwar-seerah-madinah-1__mad1-05.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "anwar-seerah-madinah-1__mad1-05.json"; sourceTree = "<group>"; };
+		00000000D10000000000A021 /* anwar-seerah-makkan__makkan-01.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "anwar-seerah-makkan__makkan-01.json"; sourceTree = "<group>"; };
+		00000000D10000000000A031 /* anwar-seerah-makkan__makkan-04.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "anwar-seerah-makkan__makkan-04.json"; sourceTree = "<group>"; };
+		00000000D10000000000A041 /* anwar-seerah-makkan__makkan-08.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "anwar-seerah-makkan__makkan-08.json"; sourceTree = "<group>"; };
+		00000000D10000000000A051 /* anwar-seerah-makkan__makkan-16.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "anwar-seerah-makkan__makkan-16.json"; sourceTree = "<group>"; };
+		00000000D1000000000000UP1 /* UrduProseText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UrduProseText.swift"; sourceTree = "<group>"; };
+		00000000D10000000000LP01 /* LibraryProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryProgressStore.swift"; sourceTree = "<group>"; };
+		00000000D10000000000AU01 /* LectureAudioCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LectureAudioCatalog.swift"; sourceTree = "<group>"; };
+		00000000D10000000000AU03 /* LectureAudioCatalog.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "LectureAudioCatalog.json"; sourceTree = "<group>"; };
+		00000000D10000000000PV01 /* LecturePlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LecturePlayerView.swift"; sourceTree = "<group>"; };
+		00000000D10000000000AS01 /* LectureAudioSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LectureAudioSession.swift"; sourceTree = "<group>"; };
+		00000000D10000000000MP01 /* MiniPlayerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MiniPlayerBar.swift"; sourceTree = "<group>"; };
+		00000000D10000000000DL01 /* LibraryDeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryDeepLink.swift"; sourceTree = "<group>"; };
+		00000000D10000000000AI01 /* AppIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIdentity.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		00000000D100000000000024 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00000000D1000000000000WG /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		00000000D1000000000000WL /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				00000000D1000000000000WC /* Be Ummati Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXGroup section */
+		00000000D1000000000000WD /* watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				00000000D1000000000000W1 /* BeUmmatiWatchApp.swift */,
+				00000000D1000000000000W2 /* WatchModels.swift */,
+				00000000D1000000000000W3 /* WatchRootView.swift */,
+				00000000D1000000000000W6 /* WatchReminders.json */,
+				00000000D1000000000000W5 /* Assets.xcassets */,
+				00000000D1000000000000W4 /* Info.plist */,
+			);
+			path = watchOS;
+			sourceTree = "<group>";
+		};
+		00000000D1000000000000H0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				00000000D1000000000000H1 /* HadithCatalog.json */,
+				00000000D1000000000000V1 /* ScholarQuotes.json */,
+				00000000D1000000000000L9 /* LibraryCatalog.json */,
+				00000000D10000000000AU03 /* LectureAudioCatalog.json */,
+				00000000D10000000000AQ01 /* AlQalamLectures.zip */,
+				00000000D1000000000000LB /* SahabaStories.json */,
+				00000000D1000000000000P5 /* HisnAlMuslim.json */,
+				00000000D10000000000A051 /* anwar-seerah-makkan__makkan-16.json */,
+				00000000D10000000000A041 /* anwar-seerah-makkan__makkan-08.json */,
+				00000000D10000000000A031 /* anwar-seerah-makkan__makkan-04.json */,
+				00000000D10000000000A021 /* anwar-seerah-makkan__makkan-01.json */,
+				00000000D10000000000A011 /* anwar-seerah-madinah-1__mad1-05.json */,
+				00000000D10000000000A001 /* anwar-seerah-madinah-1__mad1-01.json */,
+				00000000D10000000000F001 /* seerah-anwar__madinah1-01.json */,
+				00000000D10000000000F011 /* seerah-anwar__madinah1-05.json */,
+				00000000D10000000000F021 /* seerah-anwar__makkan-01.json */,
+				00000000D10000000000F031 /* seerah-anwar__makkan-04.json */,
+				00000000D10000000000F041 /* seerah-anwar__makkan-08.json */,
+				00000000D10000000000F051 /* seerah-anwar__makkan-16.json */,
+				00000000D10000000000F061 /* tareekh-ibn-kathir-urdu__v1-c1.json */,
+				00000000D10000000000F071 /* tareekh-ibn-kathir-urdu__v1-c3.json */,
+				00000000D10000000000F081 /* tareekh-ibn-kathir-urdu__v3-c1.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		00000000D1000000000000F0 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				00000000D1000000000000B0 /* Amiri.ttf */,
+				00000000D1000000000000G3 /* Fraunces-Regular.ttf */,
+				00000000D1000000000000GZ1 /* Gulzar-Regular.ttf */,
+				00000000D1000000000000IS1 /* InstrumentSerif-Regular.ttf */,
+				00000000D1000000000000B2 /* Harmattan.ttf */,
+				00000000D1000000000000B4 /* IBMPlexSansArabic.ttf */,
+				00000000D1000000000000B6 /* IndoPakNastaleeq.ttf */,
+				00000000D1000000000000B8 /* Lateef.ttf */,
+				00000000D1000000000000BA /* MeQuran.ttf */,
+				00000000D1000000000000BC /* MehrNastaliq.ttf */,
+				00000000D1000000000000BE /* NotoNaskhArabic.ttf */,
+				00000000D1000000000000C0 /* NotoNastaliqUrdu.ttf */,
+				00000000D1000000000000C2 /* ReemKufi.ttf */,
+				00000000D1000000000000C4 /* ScheherazadeNew.ttf */,
+				00000000D1000000000000C6 /* UthmanicHafs.ttf */,
+			);
+			name = Fonts;
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		00000000D100000000000025 = {
+			isa = PBXGroup;
+			children = (
+				00000000D100000000000027 /* iOS */,
+				00000000D100000000000028 /* Shared */,
+				00000000D1000000000000WD /* watchOS */,
+				00000000D100000000000026 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		00000000D100000000000026 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				00000000D10000000000001F /* Be Ummati.app */,
+				00000000D1000000000000W0 /* Be Ummati Watch App.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		00000000D100000000000027 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				00000000D10000000000001A /* BeUmmatiApp.swift */,
+				00000000D1000000000000F0 /* Fonts */,
+				00000000D10000000000001C /* Assets.xcassets */,
+				00000000D10000000000001E /* Info.plist */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		00000000D100000000000028 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				00000000D100000000000029 /* Models */,
+				00000000D1000000000000H0 /* Resources */,
+				00000000D10000000000002A /* Services */,
+				00000000D10000000000002B /* Views */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		00000000D100000000000029 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				00000000D100000000000002 /* Models.swift */,
+				00000000D1000000000000D0 /* ReminderCatalog.swift */,
+				00000000D1000000000000S1 /* ScholarQuotes.swift */,
+				00000000D1000000000000L1 /* LibraryCatalog.swift */,
+				00000000D1000000000000P1 /* HisnAlMuslim.swift */,
+				00000000D1000000000000T5 /* RelatedVerses.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		00000000D10000000000002A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				00000000D100000000000004 /* HadithAPI.swift */,
+				00000000D100000000000006 /* PrayerService.swift */,
+				00000000D100000000000008 /* QuranAPI.swift */,
+				00000000D10000000000000A /* Stores.swift */,
+				00000000D10000000000SR01 /* SeriesReminderBrain.swift */,
+				00000000D1000000000000F1 /* OfflineCache.swift */,
+				00000000D1000000000000F3 /* PrayerNotifications.swift */,
+				00000000D1000000000000F5 /* QiblaService.swift */,
+				00000000D1000000000000A1 /* ReadingSettings.swift */,
+				00000000D1000000000000T1 /* SalahTracker.swift */,
+				00000000D1000000000000T7 /* QuranWords.swift */,
+				00000000D1000000000000U1 /* ThemeStore.swift */,
+				00000000D1000000000000L3 /* TafsirAPI.swift */,
+				00000000D1000000000000L5 /* LibraryContentService.swift */,
+				00000000D10000000000LP01 /* LibraryProgressStore.swift */,
+				00000000D10000000000AU01 /* LectureAudioCatalog.swift */,
+				00000000D10000000000AS01 /* LectureAudioSession.swift */,
+				00000000D10000000000DL01 /* LibraryDeepLink.swift */,
+				00000000D10000000000AI01 /* AppIdentity.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		00000000D10000000000002B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				00000000D10000000000000C /* HadithViews.swift */,
+				00000000D10000000000000E /* HomeView.swift */,
+				00000000D100000000000010 /* PrayerCalendarViews.swift */,
+				00000000D100000000000012 /* QuranViews.swift */,
+				00000000D100000000000014 /* RootView.swift */,
+				00000000D100000000000016 /* SearchNotesViews.swift */,
+				00000000D100000000000018 /* SharedUI.swift */,
+				00000000D1000000000000E0 /* ShareHelpers.swift */,
+				00000000D1000000000000A3 /* ReadingSettingsView.swift */,
+				00000000D1000000000000F7 /* FeatureViews.swift */,
+				00000000D1000000000000G1 /* BeUmmatiTheme.swift */,
+				00000000D1000000000000R1 /* ReminderDestinationView.swift */,
+				00000000D1000000000000S3 /* ScholarsQuotesView.swift */,
+				00000000D1000000000000T3 /* SalahTrackerView.swift */,
+				00000000D1000000000000T9 /* ShareCardViews.swift */,
+				00000000D1000000000000TB /* WordByWordView.swift */,
+				00000000D1000000000000L7 /* ReadingLibraryViews.swift */,
+				00000000D1000000000000P3 /* DuasLibraryView.swift */,
+				00000000D1000000000000Q1 /* ReminderLaneDetailView.swift */,
+				00000000D1000000000000UP1 /* UrduProseText.swift */,
+				00000000D10000000000PV01 /* LecturePlayerView.swift */,
+				00000000D10000000000MP01 /* MiniPlayerBar.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		00000000D100000000000020 /* Be Ummati */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00000000D10000000000002D /* Build configuration list for PBXNativeTarget "Be Ummati" */;
+			buildPhases = (
+				00000000D100000000000022 /* Sources */,
+				00000000D100000000000024 /* Frameworks */,
+				00000000D100000000000023 /* Resources */,
+				00000000D10000000000TZ01 /* Expand Tafsir Urdu Bundle */,
+				00000000D10000000000TZ02 /* Expand Tareekh Urdu Bundle */,
+				00000000D10000000000TZ03 /* Expand Al Qalam Lectures Bundle */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Be Ummati";
+			productName = "Be Ummati";
+			productReference = 00000000D10000000000001F /* Be Ummati.app */;
+			productType = "com.apple.product-type.application";
+		};
+		00000000D1000000000000WH /* Be Ummati Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00000000D1000000000000WI /* Build configuration list for PBXNativeTarget "Be Ummati Watch App" */;
+			buildPhases = (
+				00000000D1000000000000WE /* Sources */,
+				00000000D1000000000000WG /* Frameworks */,
+				00000000D1000000000000WF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Be Ummati Watch App";
+			productName = "Be Ummati Watch App";
+			productReference = 00000000D1000000000000W0 /* Be Ummati Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		00000000D100000000000021 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 00000000D10000000000002C /* Build configuration list for PBXProject "Be Ummati" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				ar,
+				ur,
+			);
+			mainGroup = 00000000D100000000000025;
+			productRefGroup = 00000000D100000000000026 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				00000000D100000000000020 /* Be Ummati */,
+				00000000D1000000000000WH /* Be Ummati Watch App */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		00000000D100000000000023 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00000000D10000000000001D /* Assets.xcassets in Resources */,
+				00000000D1000000000000H2 /* HadithCatalog.json in Resources */,
+				00000000D1000000000000V2 /* ScholarQuotes.json in Resources */,
+				00000000D1000000000000LA /* LibraryCatalog.json in Resources */,
+				00000000D10000000000AU04 /* LectureAudioCatalog.json in Resources */,
+				00000000D1000000000000LC /* SahabaStories.json in Resources */,
+				00000000D1000000000000P6 /* HisnAlMuslim.json in Resources */,
+				00000000D10000000000A052 /* anwar-seerah-makkan__makkan-16.json in Resources */,
+				00000000D10000000000A042 /* anwar-seerah-makkan__makkan-08.json in Resources */,
+				00000000D10000000000A032 /* anwar-seerah-makkan__makkan-04.json in Resources */,
+				00000000D10000000000A022 /* anwar-seerah-makkan__makkan-01.json in Resources */,
+				00000000D10000000000A012 /* anwar-seerah-madinah-1__mad1-05.json in Resources */,
+				00000000D10000000000A002 /* anwar-seerah-madinah-1__mad1-01.json in Resources */,
+				00000000D10000000000F002 /* seerah-anwar__madinah1-01.json in Resources */,
+				00000000D10000000000F012 /* seerah-anwar__madinah1-05.json in Resources */,
+				00000000D10000000000F022 /* seerah-anwar__makkan-01.json in Resources */,
+				00000000D10000000000F032 /* seerah-anwar__makkan-04.json in Resources */,
+				00000000D10000000000F042 /* seerah-anwar__makkan-08.json in Resources */,
+				00000000D10000000000F052 /* seerah-anwar__makkan-16.json in Resources */,
+				00000000D10000000000F062 /* tareekh-ibn-kathir-urdu__v1-c1.json in Resources */,
+				00000000D10000000000F072 /* tareekh-ibn-kathir-urdu__v1-c3.json in Resources */,
+				00000000D10000000000F082 /* tareekh-ibn-kathir-urdu__v3-c1.json in Resources */,
+				00000000D1000000000000B1 /* Amiri.ttf in Resources */,
+				00000000D1000000000000GZ2 /* Gulzar-Regular.ttf in Resources */,
+				00000000D1000000000000IS2 /* InstrumentSerif-Regular.ttf in Resources */,
+				00000000D1000000000000G4 /* Fraunces-Regular.ttf in Resources */,
+				00000000D1000000000000B3 /* Harmattan.ttf in Resources */,
+				00000000D1000000000000B5 /* IBMPlexSansArabic.ttf in Resources */,
+				00000000D1000000000000B7 /* IndoPakNastaleeq.ttf in Resources */,
+				00000000D1000000000000B9 /* Lateef.ttf in Resources */,
+				00000000D1000000000000BB /* MeQuran.ttf in Resources */,
+				00000000D1000000000000BD /* MehrNastaliq.ttf in Resources */,
+				00000000D1000000000000BF /* NotoNaskhArabic.ttf in Resources */,
+				00000000D1000000000000C1 /* NotoNastaliqUrdu.ttf in Resources */,
+				00000000D1000000000000C3 /* ReemKufi.ttf in Resources */,
+				00000000D1000000000000C5 /* ScheherazadeNew.ttf in Resources */,
+				00000000D1000000000000C7 /* UthmanicHafs.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00000000D1000000000000WF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00000000D1000000000000WA /* Assets.xcassets in Resources */,
+				00000000D1000000000000WB /* WatchReminders.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		00000000D100000000000022 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00000000D100000000000003 /* Models.swift in Sources */,
+				00000000D1000000000000D1 /* ReminderCatalog.swift in Sources */,
+				00000000D100000000000005 /* HadithAPI.swift in Sources */,
+				00000000D100000000000007 /* PrayerService.swift in Sources */,
+				00000000D100000000000009 /* QuranAPI.swift in Sources */,
+				00000000D10000000000000B /* Stores.swift in Sources */,
+				00000000D10000000000SR02 /* SeriesReminderBrain.swift in Sources */,
+				00000000D1000000000000F2 /* OfflineCache.swift in Sources */,
+				00000000D1000000000000F4 /* PrayerNotifications.swift in Sources */,
+				00000000D1000000000000F6 /* QiblaService.swift in Sources */,
+				00000000D1000000000000F8 /* FeatureViews.swift in Sources */,
+				00000000D1000000000000G2 /* BeUmmatiTheme.swift in Sources */,
+				00000000D1000000000000R2 /* ReminderDestinationView.swift in Sources */,
+				00000000D1000000000000S2 /* ScholarQuotes.swift in Sources */,
+				00000000D1000000000000S4 /* ScholarsQuotesView.swift in Sources */,
+				00000000D1000000000000T2 /* SalahTracker.swift in Sources */,
+				00000000D1000000000000T4 /* SalahTrackerView.swift in Sources */,
+				00000000D1000000000000T6 /* RelatedVerses.swift in Sources */,
+				00000000D1000000000000T8 /* QuranWords.swift in Sources */,
+				00000000D1000000000000TA /* ShareCardViews.swift in Sources */,
+				00000000D1000000000000TC /* WordByWordView.swift in Sources */,
+				00000000D1000000000000U2 /* ThemeStore.swift in Sources */,
+				00000000D1000000000000L2 /* LibraryCatalog.swift in Sources */,
+				00000000D1000000000000L4 /* TafsirAPI.swift in Sources */,
+				00000000D1000000000000L6 /* LibraryContentService.swift in Sources */,
+				00000000D10000000000LP02 /* LibraryProgressStore.swift in Sources */,
+				00000000D10000000000AU02 /* LectureAudioCatalog.swift in Sources */,
+				00000000D10000000000AS02 /* LectureAudioSession.swift in Sources */,
+				00000000D10000000000DL02 /* LibraryDeepLink.swift in Sources */,
+				00000000D10000000000AI02 /* AppIdentity.swift in Sources */,
+				00000000D1000000000000L8 /* ReadingLibraryViews.swift in Sources */,
+				00000000D10000000000PV02 /* LecturePlayerView.swift in Sources */,
+				00000000D10000000000MP02 /* MiniPlayerBar.swift in Sources */,
+				00000000D1000000000000P2 /* HisnAlMuslim.swift in Sources */,
+				00000000D1000000000000P4 /* DuasLibraryView.swift in Sources */,
+				00000000D1000000000000Q2 /* ReminderLaneDetailView.swift in Sources */,
+				00000000D1000000000000UP2 /* UrduProseText.swift in Sources */,
+				00000000D1000000000000A2 /* ReadingSettings.swift in Sources */,
+				00000000D10000000000000D /* HadithViews.swift in Sources */,
+				00000000D10000000000000F /* HomeView.swift in Sources */,
+				00000000D100000000000011 /* PrayerCalendarViews.swift in Sources */,
+				00000000D100000000000013 /* QuranViews.swift in Sources */,
+				00000000D100000000000015 /* RootView.swift in Sources */,
+				00000000D100000000000017 /* SearchNotesViews.swift in Sources */,
+				00000000D100000000000019 /* SharedUI.swift in Sources */,
+				00000000D1000000000000E1 /* ShareHelpers.swift in Sources */,
+				00000000D1000000000000A4 /* ReadingSettingsView.swift in Sources */,
+				00000000D10000000000001B /* BeUmmatiApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00000000D1000000000000WE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00000000D1000000000000W7 /* BeUmmatiWatchApp.swift in Sources */,
+				00000000D1000000000000W8 /* WatchModels.swift in Sources */,
+				00000000D1000000000000W9 /* WatchRootView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXContainerItemProxy section */
+		00000000D1000000000000WM /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 00000000D100000000000021 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00000000D1000000000000WH;
+			remoteInfo = "Be Ummati Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		00000000D1000000000000WN /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00000000D1000000000000WH /* Be Ummati Watch App */;
+			targetProxy = 00000000D1000000000000WM /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		00000000D10000000000002E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_DYNAMIC_NO_PIC = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		00000000D10000000000002F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		00000000D100000000000030 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FZ278H2AWJ;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = iOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins;
+				PRODUCT_NAME = "Be Ummati";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		00000000D100000000000031 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FZ278H2AWJ;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = iOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins;
+				PRODUCT_NAME = "Be Ummati";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		00000000D1000000000000WJ /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FZ278H2AWJ;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = watchOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins.watchkitapp;
+				PRODUCT_NAME = "Be Ummati Watch App";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		00000000D1000000000000WK /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FZ278H2AWJ;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = watchOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins.watchkitapp;
+				PRODUCT_NAME = "Be Ummati Watch App";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		00000000D10000000000002C /* Build configuration list for PBXProject "Be Ummati" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00000000D10000000000002E /* Debug */,
+				00000000D10000000000002F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		00000000D10000000000002D /* Build configuration list for PBXNativeTarget "Be Ummati" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00000000D100000000000030 /* Debug */,
+				00000000D100000000000031 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		00000000D1000000000000WI /* Build configuration list for PBXNativeTarget "Be Ummati Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00000000D1000000000000WJ /* Debug */,
+				00000000D1000000000000WK /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 00000000D100000000000021 /* Project object */;
+}

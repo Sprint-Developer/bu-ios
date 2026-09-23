@@ -24,12 +24,16 @@ enum LectureAudioCatalog {
         root.attribution ?? "Audio streamed from Internet Archive"
     }
 
+    /// Chapter keys with audio — list rows and search ask this per row, so keep it O(1).
+    private static let trackKeys: Set<String> = Set(root.tracks.map(\.id))
+
     static func track(seriesID: String, chapterID: String) -> LectureAudioTrack? {
-        root.tracks.first { $0.seriesID == seriesID && $0.chapterID == chapterID }
+        guard trackKeys.contains("\(seriesID)/\(chapterID)") else { return nil }
+        return root.tracks.first { $0.seriesID == seriesID && $0.chapterID == chapterID }
     }
 
     static func hasAudio(seriesID: String, chapterID: String) -> Bool {
-        track(seriesID: seriesID, chapterID: chapterID) != nil
+        trackKeys.contains("\(seriesID)/\(chapterID)")
     }
 
     private static func load() -> LectureAudioCatalogRoot {
@@ -49,7 +53,7 @@ enum LectureAudioCatalog {
 
 // MARK: - SRT cues
 
-struct SRTCue: Identifiable, Hashable {
+struct SRTCue: Identifiable, Hashable, Sendable {
     let id: Int
     let start: TimeInterval
     let end: TimeInterval

@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct HomeView: View {
     @ObservedObject var reminders: ReminderStore
@@ -14,6 +15,9 @@ struct HomeView: View {
     @ObservedObject private var libraryProgress = LibraryProgressStore.shared
     @ObservedObject private var audio = LectureAudioSession.shared
     @ObservedObject private var listenStats = LectureListenStats.shared
+    @EnvironmentObject private var bookmarks: BookmarkStore
+    @EnvironmentObject private var theme: ThemeStore
+    @State private var showSettings = false
 
     var body: some View {
         NavigationStack {
@@ -32,14 +36,16 @@ struct HomeView: View {
                 .padding(.bottom, 24)
             }
             .beUmmatiScreenBackground()
+            .navigationTitle("Today")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        MoreSettings()
+                    Button {
+                        showSettings = true
                     } label: {
                         Image(systemName: "gearshape")
                     }
+                    .accessibilityLabel("Settings")
                 }
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
@@ -55,6 +61,19 @@ struct HomeView: View {
                 if reminders.series == nil {
                     reminders.refresh(lane: .series)
                 }
+            }
+            .sheet(isPresented: $showSettings) {
+                NavigationStack {
+                    MoreSettings()
+                        .toolbar {
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button("Done") { showSettings = false }
+                            }
+                        }
+                }
+                .environmentObject(reading)
+                .environmentObject(bookmarks)
+                .environmentObject(theme)
             }
         }
     }
@@ -75,8 +94,9 @@ struct HomeView: View {
                     .font(BeUmmatiTheme.ui(13, weight: .medium))
                     .foregroundStyle(BeUmmatiTheme.inkSecondary)
             } else {
-                Text(prayer.status)
-                    .font(BeUmmatiTheme.ui(13))
+                // Prayer status lives on the card below — keep a date here regardless.
+                Text(Date().formatted(date: .long, time: .omitted))
+                    .font(BeUmmatiTheme.ui(13, weight: .medium))
                     .foregroundStyle(BeUmmatiTheme.inkSecondary)
             }
         }
@@ -84,24 +104,7 @@ struct HomeView: View {
     }
 
     private var nextPrayerCard: some View {
-        let next = prayer.nextPrayer()
-        return VStack(alignment: .leading, spacing: 10) {
-            Text(next.map { "Next — \($0.name)" } ?? "Prayer times")
-                .font(BeUmmatiTheme.ui(14, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.85))
-            Text(countdownText(for: next?.time))
-                .font(BeUmmatiTheme.heading(42))
-                .foregroundStyle(BeUmmatiTheme.brass)
-            if let t = next?.time {
-                Text(t)
-                    .font(BeUmmatiTheme.ui(15, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.75))
-            }
-        }
-        .padding(22)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(BeUmmatiTheme.teal, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .shadow(color: BeUmmatiTheme.teal.opacity(0.35), radius: 16, y: 8)
+        NextPrayerCard(prayer: prayer)
     }
 
     @ViewBuilder
@@ -175,8 +178,7 @@ struct HomeView: View {
     @ViewBuilder
     private var seriesContinueCard: some View {
         if let series = libraryProgress.primarySeries(),
-           let chapter = libraryProgress.nextChapter(in: series)
-            ?? series.chapters?.first(where: { $0.id == libraryProgress.last(for: series.id) }) {
+           let chapter = libraryProgress.resumeChapter(in: series) {
             let total = series.chapterCount
             let n = libraryProgress.progressCount(seriesID: series.id, total: total)
             NavigationLink {
@@ -216,12 +218,13 @@ struct HomeView: View {
     private var prayerRow: some View {
         Group {
             if let day = prayer.day {
+                let nextName = prayer.nextPrayer()?.name
                 HStack(spacing: 0) {
                     ForEach(
                         [("Fajr", day.fajr), ("Dhuhr", day.dhuhr), ("Asr", day.asr), ("Maghrib", day.maghrib), ("Isha", day.isha)],
                         id: \.0
                     ) { name, time in
-                        let isNext = prayer.nextPrayer()?.name == name
+                        let isNext = nextName == name
                         VStack(spacing: 4) {
                             Text(name)
                                 .font(BeUmmatiTheme.ui(10, weight: .semibold))
@@ -392,12 +395,59 @@ struct HomeView: View {
         .beUmmatiCard()
     }
 
-    private func countdownText(for time: String?) -> String {
-        guard let time, let fire = PrayerNotifications.parseToday(time: time) else { return "—" }
-        let secs = max(0, Int(fire.timeIntervalSinceNow))
+}
+
+/// Next-prayer countdown. Owns its own tick so only this card redraws each minute,
+/// and re-reads `nextPrayerFire()` so the number keeps moving as prayers pass.
+private struct NextPrayerCard: View {
+    @ObservedObject var prayer: PrayerService
+    @State private var now = Date()
+
+    private let tick = Timer.publish(every: 20, on: .main, in: .common).autoconnect()
+
+    var body: some View {
+        let next = prayer.nextPrayerFire()
+        VStack(alignment: .leading, spacing: 10) {
+            Text(next.map { "Next — \($0.name)" } ?? "Prayer times")
+                .font(BeUmmatiTheme.ui(14, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.85))
+            Text(countdown(to: next?.fire))
+                .font(BeUmmatiTheme.heading(42))
+                .foregroundStyle(BeUmmatiTheme.brass)
+                .contentTransition(.numericText())
+            if let next {
+                HStack(spacing: 8) {
+                    Text(next.time)
+                    if prayer.usingFallbackLocation {
+                        Text("· Dubai")
+                    }
+                }
+                .font(BeUmmatiTheme.ui(15, weight: .medium))
+                .foregroundStyle(.white.opacity(0.75))
+            } else {
+                Text(prayer.status)
+                    .font(BeUmmatiTheme.ui(13, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.8))
+                    .fixedSize(horizontal: false, vertical: true)
+                Button("Retry") { prayer.refresh() }
+                    .font(BeUmmatiTheme.ui(13, weight: .bold))
+                    .foregroundStyle(BeUmmatiTheme.brass)
+            }
+        }
+        .padding(22)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(BeUmmatiTheme.teal, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .shadow(color: BeUmmatiTheme.teal.opacity(0.35), radius: 16, y: 8)
+        .onReceive(tick) { now = $0 }
+    }
+
+    private func countdown(to fire: Date?) -> String {
+        guard let fire else { return "—" }
+        let secs = max(0, Int(fire.timeIntervalSince(now)))
         let h = secs / 3600
         let m = (secs % 3600) / 60
         if h > 0 { return "\(h)h \(m)m" }
-        return "\(m)m"
+        if m > 0 { return "\(m)m" }
+        return "now"
     }
 }

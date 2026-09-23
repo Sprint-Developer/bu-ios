@@ -119,6 +119,11 @@ struct ReadingSettingsView: View {
                 Button("Reset to defaults", role: .destructive) {
                     settings.reset()
                 }
+            } footer: {
+                Text("Be Ummati 1.1.0")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                    .frame(maxWidth: .infinity)
             }
         }
         .navigationTitle("Reading")

@@ -11,6 +11,8 @@ final class LibraryProgressStore: ObservableObject {
     @Published private(set) var completed: [String: Set<String>] = [:]
     /// "seriesID/chapterID" → language tab raw value
     @Published private(set) var langTab: [String: String] = [:]
+    /// seriesID → when it was last opened, so Home can surface the series you're actually in.
+    @Published private(set) var lastTouchedAt: [String: Date] = [:]
     /// Scroll offsets — not @Published (updating these must not redraw the reader).
     private var scrollY: [String: Double] = [:]
     private var scrollPersistWork: DispatchWorkItem?
@@ -22,6 +24,8 @@ final class LibraryProgressStore: ObservableObject {
         var completed: [String: [String]]
         var langTab: [String: String]
         var scrollY: [String: Double]
+        /// Optional so snapshots written before this field still decode (losing it would wipe progress).
+        var lastTouchedAt: [String: Date]?
     }
 
     init() {
@@ -39,6 +43,7 @@ final class LibraryProgressStore: ObservableObject {
             completed = snap.completed.mapValues { Set($0) }
             langTab = snap.langTab
             scrollY = snap.scrollY
+            lastTouchedAt = snap.lastTouchedAt ?? [:]
         }
     }
 
@@ -47,7 +52,8 @@ final class LibraryProgressStore: ObservableObject {
             lastChapter: lastChapter,
             completed: completed.mapValues { Array($0).sorted() },
             langTab: langTab,
-            scrollY: scrollY
+            scrollY: scrollY,
+            lastTouchedAt: lastTouchedAt
         )
         if let data = try? JSONEncoder().encode(snap) {
             UserDefaults.standard.set(data, forKey: key)
@@ -56,6 +62,7 @@ final class LibraryProgressStore: ObservableObject {
 
     func mark(seriesID: String, chapterID: String) {
         lastChapter[seriesID] = chapterID
+        lastTouchedAt[seriesID] = Date()
         persist()
         objectWillChange.send()
     }
@@ -100,6 +107,17 @@ final class LibraryProgressStore: ObservableObject {
         return chapters.first { !done.contains($0.id) }
     }
 
+    /// Where "continue" should land: the chapter you're part-way through, else the next unread one.
+    func resumeChapter(in series: LibrarySeries) -> LibraryChapterMeta? {
+        guard let chapters = series.chapters, !chapters.isEmpty else { return nil }
+        if let last = lastChapter[series.id],
+           !isCompleted(seriesID: series.id, chapterID: last),
+           let current = chapters.first(where: { $0.id == last }) {
+            return current
+        }
+        return nextChapter(in: series)
+    }
+
     func setLangTab(seriesID: String, chapterID: String, tab: String) {
         langTab["\(seriesID)/\(chapterID)"] = tab
         persist()
@@ -127,13 +145,24 @@ final class LibraryProgressStore: ObservableObject {
     /// Best series to surface on Home (most recently touched with remaining chapters).
     func primarySeries() -> LibrarySeries? {
         let anwar = LibraryCatalog.all.filter { $0.id.hasPrefix("anwar-") }
-        // Prefer series with a lastChapter
         let touched = anwar.filter { lastChapter[$0.id] != nil }
-        if let s = touched.max(by: { a, b in
-            progressCount(seriesID: a.id, total: a.chapterCount)
-                < progressCount(seriesID: b.id, total: b.chapterCount)
+
+        // A series you still have chapters left in beats one you've finished.
+        let unfinished = touched.filter { completedCount(seriesID: $0.id) < $0.chapterCount }
+        let pool = unfinished.isEmpty ? touched : unfinished
+
+        // Most recently opened wins. Series marked before we tracked timestamps fall back
+        // to furthest progress so behaviour stays sane on upgrade.
+        if let recent = pool.filter({ lastTouchedAt[$0.id] != nil }).max(by: {
+            (lastTouchedAt[$0.id] ?? .distantPast) < (lastTouchedAt[$1.id] ?? .distantPast)
         }) {
-            return s
+            return recent
+        }
+        if let furthest = pool.max(by: {
+            progressCount(seriesID: $0.id, total: $0.chapterCount)
+                < progressCount(seriesID: $1.id, total: $1.chapterCount)
+        }) {
+            return furthest
         }
         return anwar.first
     }

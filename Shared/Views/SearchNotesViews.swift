@@ -4,8 +4,56 @@ enum SearchScope: String, CaseIterable, Identifiable {
     case both = "All"
     case quran = "Qur’an"
     case hadith = "Hadith"
+    case library = "Lectures"
     case notes = "My notes"
     var id: String { rawValue }
+}
+
+/// A library chapter / lecture matched by title — local, so it resolves as you type.
+struct LibraryTitleHit: Identifiable, Hashable {
+    let seriesID: String
+    let seriesTitle: String
+    let seriesIcon: String
+    let chapter: LibraryChapterMeta
+    let hasAudio: Bool
+
+    var id: String { "\(seriesID)/\(chapter.id)" }
+}
+
+enum LibraryTitleSearch {
+    /// Matches every whitespace-separated term against chapter title, group, and series title.
+    static func run(query: String, limit: Int = 40) -> [LibraryTitleHit] {
+        let q = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard q.count >= 2 else { return [] }
+        let terms = q.split(separator: " ").map(String.init)
+
+        var scored: [(score: Int, hit: LibraryTitleHit)] = []
+        for series in LibraryCatalog.all {
+            guard let chapters = series.chapters else { continue }
+            let seriesLow = series.title.lowercased()
+            for ch in chapters {
+                let titleLow = ch.title.lowercased()
+                let haystack = "\(titleLow) \(ch.group?.lowercased() ?? "") \(seriesLow)"
+                guard terms.allSatisfy({ haystack.contains($0) }) else { continue }
+
+                var score = 0
+                if titleLow.contains(q) { score += 10 }
+                if titleLow.hasPrefix(q) { score += 6 }
+                if seriesLow.contains(q) { score += 3 }
+                let hasAudio = LectureAudioCatalog.hasAudio(seriesID: series.id, chapterID: ch.id)
+                if hasAudio { score += 1 }
+
+                scored.append((score, LibraryTitleHit(
+                    seriesID: series.id,
+                    seriesTitle: series.title,
+                    seriesIcon: series.icon,
+                    chapter: ch,
+                    hasAudio: hasAudio
+                )))
+            }
+        }
+        return scored.sorted { $0.score > $1.score }.prefix(limit).map { $0.hit }
+    }
 }
 
 struct SearchView: View {
@@ -15,11 +63,14 @@ struct SearchView: View {
     @State private var query = ""
     @State private var quranHits: [QuranAyah] = []
     @State private var hadithHits: [HadithItem] = []
+    @State private var libraryHits: [LibraryTitleHit] = []
     @State private var loading = false
     @State private var scope: SearchScope = .both
     @State private var book = "all"
-    @State private var status = "Search Qur’an, Hadith, and your notes."
+    @State private var status = "Search Qur’an, Hadith, lectures, and your notes."
     @State private var searched = false
+
+    private var showsLibrary: Bool { scope == .both || scope == .library }
 
     private var noteHits: [NoteItem] {
         guard scope == .both || scope == .notes else { return [] }
@@ -61,13 +112,18 @@ struct SearchView: View {
                         }
                     }
 
+                    // Library titles are on-device: show them while Qur’an / Hadith fetch.
+                    if showsLibrary, !libraryHits.isEmpty {
+                        libraryResults
+                    }
+
                     if loading {
                         ProgressView("Searching…")
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 40)
                     } else if searched {
                         results
-                    } else {
+                    } else if libraryHits.isEmpty {
                         Text(status)
                             .font(BeUmmatiTheme.ui(14))
                             .foregroundStyle(BeUmmatiTheme.inkSecondary)
@@ -85,12 +141,80 @@ struct SearchView: View {
                         .disabled(loading)
                 }
             }
+            .task(id: query) {
+                // Debounce so a fast typist doesn't rescan the catalog on every keystroke.
+                try? await Task.sleep(nanoseconds: 180_000_000)
+                guard !Task.isCancelled else { return }
+                libraryHits = LibraryTitleSearch.run(query: query)
+            }
         }
     }
 
     @ViewBuilder
+    private var libraryResults: some View {
+        sectionHeader("Lectures & chapters · \(libraryHits.count)")
+        ForEach(libraryHits) { hit in
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(spacing: 8) {
+                    Image(systemName: hit.seriesIcon)
+                        .foregroundStyle(BeUmmatiTheme.teal)
+                    Text(hit.seriesTitle)
+                        .font(BeUmmatiTheme.ui(12, weight: .bold))
+                        .foregroundStyle(BeUmmatiTheme.brass)
+                        .lineLimit(1)
+                    Spacer(minLength: 4)
+                    if let vol = hit.chapter.volume {
+                        Text("Vol \(vol)")
+                            .font(BeUmmatiTheme.ui(11, weight: .bold))
+                            .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                    }
+                }
+                Text(highlighted(hit.chapter.title, term: query))
+                    .font(BeUmmatiTheme.heading(16))
+                    .foregroundStyle(BeUmmatiTheme.ink)
+                if let group = hit.chapter.group, !group.isEmpty {
+                    Text(group)
+                        .font(BeUmmatiTheme.ui(12))
+                        .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                }
+                HStack(spacing: 14) {
+                    if let series = LibraryCatalog.series(id: hit.seriesID) {
+                        NavigationLink {
+                            LibraryChapterReaderView(series: series, chapter: hit.chapter)
+                        } label: {
+                            Label("Read", systemImage: "book")
+                        }
+                        .buttonStyle(.plain)
+
+                        if hit.hasAudio {
+                            Button {
+                                playLecture(series: series, chapter: hit.chapter)
+                            } label: {
+                                Label("Listen", systemImage: "play.circle")
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    Spacer()
+                }
+                .font(BeUmmatiTheme.ui(13, weight: .semibold))
+                .foregroundStyle(BeUmmatiTheme.teal)
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .beUmmatiCard()
+        }
+    }
+
+    private func playLecture(series: LibrarySeries, chapter: LibraryChapterMeta) {
+        guard let track = LectureAudioCatalog.track(seriesID: series.id, chapterID: chapter.id) else { return }
+        LectureAudioSession.shared.play(series: series, chapter: chapter, track: track)
+        LectureAudioSession.shared.showFullPlayer = true
+    }
+
+    @ViewBuilder
     private var results: some View {
-        if scope != .hadith && scope != .notes {
+        if scope == .both || scope == .quran {
             sectionHeader("Qur’an · \(quranHits.count)")
             ForEach(quranHits) { a in
                 let ar = a.arabic(for: reading.arabicFont)
@@ -104,7 +228,7 @@ struct SearchView: View {
                 )
             }
         }
-        if scope != .quran && scope != .notes {
+        if scope == .both || scope == .hadith {
             sectionHeader("Hadith · \(hadithHits.count)")
             ForEach(hadithHits) { h in
                 let bookName = HadithAPI.books.first { $0.slug == h.book }?.name ?? h.book
@@ -134,7 +258,7 @@ struct SearchView: View {
                 .beUmmatiCard()
             }
         }
-        if quranHits.isEmpty && hadithHits.isEmpty && noteHits.isEmpty {
+        if quranHits.isEmpty && hadithHits.isEmpty && noteHits.isEmpty && libraryHits.isEmpty {
             Text(status)
                 .font(BeUmmatiTheme.ui(14))
                 .foregroundStyle(BeUmmatiTheme.inkSecondary)
@@ -206,10 +330,17 @@ struct SearchView: View {
             status = "Type at least 2 characters."
             return
         }
+        libraryHits = LibraryTitleSearch.run(query: q)
         if scope == .notes {
             searched = true
             loading = false
             status = noteHits.isEmpty ? "No notes matched." : ""
+            return
+        }
+        if scope == .library {
+            searched = true
+            loading = false
+            status = libraryHits.isEmpty ? "No lecture or chapter title matched." : ""
             return
         }
         loading = true
@@ -228,10 +359,10 @@ struct SearchView: View {
                 quranHits = try await QuranAPI.shared.search(query: q)
             case .hadith:
                 hadithHits = try await HadithAPI.shared.search(query: q, book: book == "all" ? nil : book, maxSections: 20)
-            case .notes:
+            case .library, .notes:
                 break
             }
-            if quranHits.isEmpty && hadithHits.isEmpty && noteHits.isEmpty {
+            if quranHits.isEmpty && hadithHits.isEmpty && noteHits.isEmpty && libraryHits.isEmpty {
                 status = "No matches for “\(q)”."
             } else {
                 status = ""

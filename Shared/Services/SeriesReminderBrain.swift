@@ -53,26 +53,41 @@ enum SeriesReminderBrain {
 
     /// Build one smart series reminder, or nil if content is unavailable.
     static func pick(avoiding recent: [String]) async -> ReminderItem? {
-        let candidates = chapterCandidates()
-        guard !candidates.isEmpty else { return nil }
-
         let mood = moodThemes()
-        let progress = await MainActor.run { LibraryProgressStore.shared.lastChapter }
-        let shuffled = candidates.shuffled()
 
-        var ranked = shuffled.sorted { a, b in
-            scoreChapter(a, mood: mood, progress: progress, recent: recent)
-                > scoreChapter(b, mood: mood, progress: progress, recent: recent)
-        }
-
-        if ranked.count > 8 {
-            let head = Array(ranked.prefix(12))
-            let tail = Array(ranked.dropFirst(12).prefix(24)).shuffled()
-            ranked = (head + tail).shuffled().sorted {
-                scoreChapter($0, mood: mood, progress: progress, recent: recent)
-                    > scoreChapter($1, mood: mood, progress: progress, recent: recent)
+        // When the user has reading progress, try those chapters first so Home’s series lane
+        // is never empty while lecture JSON is still loading or scoring is picky.
+        let inProgress = await MainActor.run { inProgressChapterRefs() }
+        for chapter in inProgress {
+            let refKey = "\(chapter.seriesID)/\(chapter.chapterID)"
+            if recent.contains(refKey) { continue }
+            guard let body = try? await LibraryContentService.shared.loadChapter(
+                seriesID: chapter.seriesID,
+                chapterID: chapter.chapterID
+            ) else { continue }
+            if let item = makeItem(series: chapter, body: body, mood: mood, relax: true) {
+                return item
             }
         }
+
+        var candidates = chapterCandidates()
+        if candidates.isEmpty, !inProgress.isEmpty {
+            candidates = inProgress
+        }
+        guard !candidates.isEmpty else {
+            return await reminderFromProgress(avoiding: recent, mood: mood)
+        }
+
+        let context = await MainActor.run { RankContext(mood: mood, recent: recent) }
+
+        // Pre-shuffle so equal scores come out in a different order each refresh,
+        // then score once per chapter — the old comparator re-scored (and re-read
+        // UserDefaults) on every comparison.
+        let shuffled = candidates.shuffled()
+        let ranked = shuffled
+            .map { (score: scoreChapter($0, context: context), chapter: $0) }
+            .sorted { $0.score > $1.score }
+            .map { $0.chapter }
 
         for chapter in ranked.prefix(36) {
             let refKey = "\(chapter.seriesID)/\(chapter.chapterID)"
@@ -95,10 +110,87 @@ enum SeriesReminderBrain {
                 return item
             }
         }
+        return await reminderFromProgress(avoiding: recent, mood: mood)
+    }
+
+    /// Lightweight reminder tied to the chapter you're actively reading (no JSON snippet required).
+    static func reminderFromProgress(avoiding recent: [String], mood: [String]? = nil) async -> ReminderItem? {
+        let themes = mood ?? moodThemes()
+        let refs = await MainActor.run { inProgressChapterRefs() }
+        for chapter in refs {
+            let refKey = "\(chapter.seriesID)/\(chapter.chapterID)"
+            if recent.contains(refKey) { continue }
+            let cleanTitle = chapter.chapterTitle
+                .replacingOccurrences(of: #"^#?\d+\.\s*"#, with: "", options: .regularExpression)
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            return ReminderItem(
+                kind: "Series",
+                arabic: "",
+                english: "Pick up where you left off in “\(cleanTitle.isEmpty ? chapter.seriesTitle : cleanTitle)” — open Library to continue.",
+                urdu: "",
+                ref: "\(chapter.seriesTitle) · \(cleanTitle.isEmpty ? "Continue" : cleanTitle)",
+                theme: themes.first ?? "Heart",
+                title: cleanTitle.isEmpty ? chapter.seriesTitle : cleanTitle,
+                librarySeriesID: chapter.seriesID,
+                libraryChapterID: chapter.chapterID
+            )
+        }
         return nil
     }
 
+    @MainActor
+    private static func inProgressChapterRefs() -> [ChapterRef] {
+        let store = LibraryProgressStore.shared
+        var out: [ChapterRef] = []
+        for series in LibraryCatalog.all {
+            guard store.lastChapter[series.id] != nil else { continue }
+            guard let chapters = series.chapters, !chapters.isEmpty else { continue }
+            guard let ch = store.resumeChapter(in: series) ?? store.nextChapter(in: series) else { continue }
+            out.append(ChapterRef(
+                seriesID: series.id,
+                seriesTitle: series.title,
+                chapterID: ch.id,
+                chapterTitle: ch.title,
+                group: ch.group
+            ))
+        }
+        out.sort {
+            let a = store.lastTouchedAt[$0.seriesID] ?? .distantPast
+            let b = store.lastTouchedAt[$1.seriesID] ?? .distantPast
+            return a > b
+        }
+        return out
+    }
+
     // MARK: - Ranking
+
+    /// Everything ranking needs, read once instead of per comparison.
+    private struct RankContext {
+        let mood: [String]
+        let recent: Set<String>
+        let lastChapter: [String: String]
+        let completed: [String: Set<String>]
+        /// seriesID → the chapter the reader is heading into next.
+        let nextChapter: [String: String]
+        let filter: String
+        let hour: Int
+
+        @MainActor
+        init(mood: [String], recent: [String]) {
+            let store = LibraryProgressStore.shared
+            self.mood = mood.map { $0.lowercased() }
+            self.recent = Set(recent)
+            lastChapter = store.lastChapter
+            completed = store.completed
+            var next: [String: String] = [:]
+            for series in LibraryCatalog.all where store.lastChapter[series.id] != nil {
+                if let n = store.nextChapter(in: series) { next[series.id] = n.id }
+            }
+            nextChapter = next
+            filter = UserDefaults.standard.string(forKey: "beummati.series.reminderFilter") ?? "all"
+            hour = Calendar.current.component(.hour, from: .now)
+        }
+    }
 
     private struct ChapterRef {
         let seriesID: String
@@ -145,20 +237,18 @@ enum SeriesReminderBrain {
         return out
     }
 
-    private static func scoreChapter(
-        _ ch: ChapterRef,
-        mood: [String],
-        progress: [String: String],
-        recent: [String]
-    ) -> Int {
+    private static func scoreChapter(_ ch: ChapterRef, context: RankContext) -> Int {
         var score = 0
         let refKey = "\(ch.seriesID)/\(ch.chapterID)"
-        if recent.contains(refKey) { score -= 40 }
-        if progress[ch.seriesID] != nil { score += 18 }
-        if progress[ch.seriesID] == ch.chapterID { score += 10 }
+        if context.recent.contains(refKey) { score -= 40 }
+        // Lean hard toward series you're actually working through, and inside those
+        // toward the chapter you're on / about to open.
+        if context.lastChapter[ch.seriesID] != nil { score += 18 }
+        if context.lastChapter[ch.seriesID] == ch.chapterID { score += 10 }
+        if context.nextChapter[ch.seriesID] == ch.chapterID { score += 26 }
+        if context.completed[ch.seriesID]?.contains(ch.chapterID) == true { score -= 6 }
 
-        let filter = UserDefaults.standard.string(forKey: "beummati.series.reminderFilter") ?? "all"
-        switch filter {
+        switch context.filter {
         case "seerah":
             score += ch.seriesID.contains("seerah") ? 25 : -30
         case "prophets":
@@ -172,10 +262,10 @@ enum SeriesReminderBrain {
         }
 
         let blob = "\(ch.seriesTitle) \(ch.chapterTitle) \(ch.group ?? "")".lowercased()
-        for theme in mood {
-            if blob.contains(theme.lowercased()) { score += 4 }
+        for theme in context.mood where blob.contains(theme) {
+            score += 4
         }
-        let hour = Calendar.current.component(.hour, from: .now)
+        let hour = context.hour
         if hour < 11, ch.seriesID.contains("seerah") || ch.seriesID.contains("prophets") { score += 2 }
         if hour >= 20, ch.seriesID.contains("hereafter") || ch.seriesID.contains("dreams") { score += 3 }
         if ch.seriesID.contains("abu-bakr") || ch.seriesID.contains("umar") { score += 1 }

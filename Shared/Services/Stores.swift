@@ -91,6 +91,13 @@ final class ReminderStore: ObservableObject {
             WidgetSnapshot.writeSeriesReminder(item)
             return
         }
+        if series == nil, let progress = await SeriesReminderBrain.reminderFromProgress(avoiding: seen) {
+            set(progress, lane: .series)
+            let key = "\(progress.librarySeriesID ?? "")/\(progress.libraryChapterID ?? "")"
+            remember(key.isEmpty ? progress.ref : key, lane: .series, seen: &seen)
+            WidgetSnapshot.writeSeriesReminder(progress)
+            return
+        }
         if series == nil, let fallback = fallback(for: .series) {
             set(fallback, lane: .series)
             WidgetSnapshot.writeSeriesReminder(fallback)
@@ -141,6 +148,23 @@ final class ReminderStore: ObservableObject {
                 hadithNumber: 1
             )
         case .series:
+            if let series = LibraryProgressStore.shared.primarySeries(),
+               let chapter = LibraryProgressStore.shared.resumeChapter(in: series) {
+                let title = chapter.title
+                    .replacingOccurrences(of: #"^#?\d+\.\s*"#, with: "", options: .regularExpression)
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                return ReminderItem(
+                    kind: "Series",
+                    arabic: "",
+                    english: "Continue “\(title.isEmpty ? series.title : title)” from your in-progress series.",
+                    urdu: "",
+                    ref: "\(series.title) · \(title.isEmpty ? "Continue" : title)",
+                    theme: "Heart",
+                    title: title.isEmpty ? series.title : title,
+                    librarySeriesID: series.id,
+                    libraryChapterID: chapter.id
+                )
+            }
             return ReminderItem(
                 kind: "Series",
                 arabic: "",

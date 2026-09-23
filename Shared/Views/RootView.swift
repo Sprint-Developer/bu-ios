@@ -6,13 +6,13 @@ struct RootView: View {
     @StateObject private var notes = NotesStore()
     @StateObject private var bookmarks = BookmarkStore()
     @StateObject private var plan = DailyPlanStore()
-    @StateObject private var prayer = PrayerService()
+    @ObservedObject private var prayer = PrayerService.shared
     @StateObject private var reading = ReadingSettings()
     @StateObject private var salah = SalahTracker()
     @ObservedObject private var notify = PrayerNotifications.shared
     @ObservedObject private var theme = ThemeStore.shared
     @ObservedObject private var deepLink = LibraryDeepLink.shared
-    @ObservedObject private var audio = LectureAudioSession.shared
+    @ObservedObject private var player = LecturePlayerPresentation.shared
     @State private var tab = 0
     @State private var deepLinkSheet: LibraryDeepLink.Target?
 
@@ -72,7 +72,7 @@ struct RootView: View {
         .onChange(of: deepLink.pending) { _, _ in
             consumeDeepLink()
         }
-        .sheet(isPresented: $audio.showFullPlayer) {
+        .sheet(isPresented: $player.showFull) {
             NavigationStack {
                 LecturePlayerView()
             }
@@ -153,7 +153,7 @@ struct MoreSettings: View {
     @EnvironmentObject var reading: ReadingSettings
     @EnvironmentObject var bookmarks: BookmarkStore
     @StateObject private var notes = NotesStore()
-    @StateObject private var prayer = PrayerService()
+    @ObservedObject private var prayer = PrayerService.shared
     @StateObject private var salah = SalahTracker()
     @ObservedObject private var notify = PrayerNotifications.shared
     @ObservedObject private var theme = ThemeStore.shared
@@ -172,73 +172,95 @@ struct MoreSettings: View {
                 Text("Profile")
             }
 
-            NavigationLink {
-                SearchView(notes: notes, bookmarks: bookmarks)
-            } label: {
-                Label("Search", systemImage: "magnifyingglass")
+            Section {
+                NavigationLink {
+                    ReadingSettingsView(settings: reading)
+                } label: {
+                    Label("Reading settings", systemImage: "textformat.size")
+                }
+                NavigationLink {
+                    ThemeSettingsView(theme: theme)
+                } label: {
+                    Label("Theme", systemImage: "paintpalette")
+                }
+            } header: {
+                Text("Reading & look")
+            } footer: {
+                Text("Theme: \(theme.kind.title). Manuscript, Midnight, Emerald, Ocean, Ummati, Soft Day.")
             }
-            NavigationLink {
-                ThemeSettingsView(theme: theme)
-            } label: {
-                Label("Theme", systemImage: "paintpalette")
+
+            Section {
+                NavigationLink {
+                    PrayerNotifySettingsView(notify: notify, prayer: prayer)
+                } label: {
+                    Label("Prayer notifications", systemImage: "bell.badge")
+                }
+                NavigationLink {
+                    PrayerView(prayer: prayer, notify: notify)
+                } label: {
+                    Label("Prayer times", systemImage: "clock")
+                }
+                NavigationLink {
+                    QiblaView()
+                } label: {
+                    Label("Qibla", systemImage: "location.north.line")
+                }
+                NavigationLink {
+                    CalendarView(prayer: prayer)
+                } label: {
+                    Label("Islamic calendar", systemImage: "calendar")
+                }
+            } header: {
+                Text("Reminders & prayer")
+            } footer: {
+                Text(notify.enabled ? "Prayer alerts on · \(notify.authStatus)" : "Prayer alerts off")
             }
-            NavigationLink {
-                SalahTrackerView(tracker: salah)
-            } label: {
-                Label("Salah tracker", systemImage: "checkmark.circle")
+
+            Section("Practice") {
+                NavigationLink {
+                    SalahTrackerView(tracker: salah)
+                } label: {
+                    Label("Salah tracker", systemImage: "checkmark.circle")
+                }
+                NavigationLink {
+                    DuasLibraryView()
+                } label: {
+                    Label("Duas & Adhkar", systemImage: "hands.sparkles")
+                }
+                NavigationLink {
+                    DhikrView()
+                } label: {
+                    Label("Dhikr counter", systemImage: "circle.grid.cross")
+                }
             }
-            NavigationLink {
-                ReadingSettingsView(settings: reading)
-            } label: {
-                Label("Reading settings", systemImage: "textformat.size")
+
+            Section("Find & offline") {
+                NavigationLink {
+                    SearchView(notes: notes, bookmarks: bookmarks)
+                } label: {
+                    Label("Search", systemImage: "magnifyingglass")
+                }
+                NavigationLink {
+                    ScholarsQuotesView()
+                } label: {
+                    Label("Scholars", systemImage: "person.3")
+                }
+                NavigationLink {
+                    OfflinePackView()
+                } label: {
+                    Label("Offline pack", systemImage: "arrow.down.circle")
+                }
             }
-            NavigationLink {
-                PrayerView(prayer: prayer, notify: notify)
-            } label: {
-                Label("Prayer times", systemImage: "clock")
-            }
-            NavigationLink {
-                PrayerNotifySettingsView(notify: notify, prayer: prayer)
-            } label: {
-                Label("Prayer notifications", systemImage: "bell.badge")
-            }
-            NavigationLink {
-                QiblaView()
-            } label: {
-                Label("Qibla", systemImage: "location.north.line")
-            }
-            NavigationLink {
-                OfflinePackView()
-            } label: {
-                Label("Offline pack", systemImage: "arrow.down.circle")
-            }
-            NavigationLink {
-                CalendarView(prayer: prayer)
-            } label: {
-                Label("Islamic calendar", systemImage: "calendar")
-            }
-            NavigationLink {
-                DuasLibraryView()
-            } label: {
-                Label("Duas & Adhkar", systemImage: "hands.sparkles")
-            }
-            NavigationLink {
-                DhikrView()
-            } label: {
-                Label("Dhikr counter", systemImage: "circle.grid.cross")
-            }
-            NavigationLink {
-                ScholarsQuotesView()
-            } label: {
-                Label("Scholars", systemImage: "person.3")
-            }
-            Section("Design") {
-                Text("Theme: \(theme.kind.title). Change under Theme — Manuscript, Midnight, Emerald, Ocean, Ummati, Soft Day.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+
+            Section("About") {
+                LabeledContent(AppIdentity.brand, value: AppIdentity.versionLabel)
+                    .font(.system(size: 14))
             }
         }
         .navigationTitle("Settings")
-        .onAppear { prayer.refresh() }
+        .onAppear {
+            prayer.refresh()
+            notify.refreshAuth()
+        }
     }
 }

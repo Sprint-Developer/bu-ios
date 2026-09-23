@@ -4,11 +4,20 @@ import Combine
 
 @MainActor
 final class PrayerService: NSObject, ObservableObject, CLLocationManagerDelegate {
+    /// One instance app-wide — a second one would spin up a second CLLocationManager
+    /// and re-prompt / re-fetch every time Settings opened.
+    static let shared = PrayerService()
+
     @Published var day: PrayerDay?
     @Published var status = "Locating…"
     @Published var cityLabel = ""
     @Published var latitude: Double = 25.2048
     @Published var longitude: Double = 55.2708
+    /// True when times come from the Dubai fallback rather than the device location.
+    @Published var usingFallbackLocation = false
+
+    static let fallbackLatitude = 25.2048
+    static let fallbackLongitude = 55.2708
 
     private let manager = CLLocationManager()
     private var asked = false
@@ -30,27 +39,46 @@ final class PrayerService: NSObject, ObservableObject, CLLocationManagerDelegate
         case .notDetermined:
             status = "Allow location for prayer times"
             manager.requestWhenInUseAuthorization()
+            // Don't leave Home blank while the prompt is unanswered.
+            if day == nil { useFallbackLocation() }
         case .authorizedAlways, .authorizedWhenInUse:
             status = "Updating prayer times…"
             manager.requestLocation()
         default:
             status = "Location off — using Dubai"
-            cityLabel = "Dubai"
-            Task { await load(lat: 25.2048, lon: 55.2708) }
+            useFallbackLocation()
         }
+    }
+
+    /// Load Dubai times — used when location is denied, fails, or is still unanswered.
+    func useFallbackLocation() {
+        usingFallbackLocation = true
+        cityLabel = "Dubai"
+        Task { await load(lat: Self.fallbackLatitude, lon: Self.fallbackLongitude) }
     }
 
     /// Next upcoming prayer name + time for Today glance / widgets.
     func nextPrayer() -> (name: String, time: String)? {
+        if let next = nextPrayerFire() { return (next.name, next.time) }
+        guard let day else { return nil }
+        return ("Fajr", day.fajr)
+    }
+
+    /// Next prayer with the exact moment it lands, rolling to tomorrow's Fajr once Isha has passed.
+    /// Home needs the date (not just the string) or the countdown pins at 0m all evening.
+    func nextPrayerFire() -> (name: String, time: String, fire: Date)? {
         guard let day else { return nil }
         let pairs = [("Fajr", day.fajr), ("Dhuhr", day.dhuhr), ("Asr", day.asr), ("Maghrib", day.maghrib), ("Isha", day.isha)]
         let now = Date()
         for (name, time) in pairs {
             if let fire = PrayerNotifications.parseToday(time: time), fire > now {
-                return (name, time)
+                return (name, time, fire)
             }
         }
-        return ("Fajr", day.fajr)
+        guard let fajrToday = PrayerNotifications.parseToday(time: day.fajr),
+              let fajrTomorrow = Calendar.current.date(byAdding: .day, value: 1, to: fajrToday)
+        else { return nil }
+        return ("Fajr", day.fajr, fajrTomorrow)
     }
 
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
@@ -60,6 +88,7 @@ final class PrayerService: NSObject, ObservableObject, CLLocationManagerDelegate
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let loc = locations.last else { return }
         Task { @MainActor in
+            self.usingFallbackLocation = false
             self.latitude = loc.coordinate.latitude
             self.longitude = loc.coordinate.longitude
             self.cityLabel = String(format: "%.2f, %.2f", loc.coordinate.latitude, loc.coordinate.longitude)
@@ -70,8 +99,7 @@ final class PrayerService: NSObject, ObservableObject, CLLocationManagerDelegate
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         Task { @MainActor in
             self.status = "Location failed — Dubai times"
-            self.cityLabel = "Dubai"
-            await self.load(lat: 25.2048, lon: 55.2708)
+            self.useFallbackLocation()
         }
     }
 
@@ -116,7 +144,7 @@ final class PrayerService: NSObject, ObservableObject, CLLocationManagerDelegate
                 WidgetSnapshot.writePrayer(parsed, nextName: next.name, nextTime: next.time)
             }
             PrayerNotifications.shared.reschedule(day: parsed)
-            status = "Updated"
+            status = usingFallbackLocation ? "Dubai times — allow location for yours" : "Updated"
         } catch {
             if day != nil {
                 status = "Offline — showing cached times"

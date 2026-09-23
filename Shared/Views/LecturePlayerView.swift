@@ -117,6 +117,8 @@ struct LecturePlayerView: View {
     @State private var showSync = false
     @State private var showShare = false
     @State private var bookmarkFlash = false
+    /// Non-nil only while the listener is dragging the waveform.
+    @State private var scrubProgress: Double?
     @AppStorage("beummati.player.skin") private var skinKindRaw = PlayerSkinKind.dark.rawValue
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var reading: ReadingSettings
@@ -509,7 +511,8 @@ struct LecturePlayerView: View {
         VStack(spacing: 10) {
             GeometryReader { geo in
                 let w = geo.size.width
-                let progress = session.duration > 0 ? min(1, max(0, session.currentTime / session.duration)) : 0
+                let playhead = session.duration > 0 ? min(1, max(0, session.currentTime / session.duration)) : 0
+                let progress = scrubProgress ?? playhead
                 ZStack(alignment: .leading) {
                     waveformStrip(width: w, active: false)
                     waveformStrip(width: w, active: true)
@@ -528,17 +531,23 @@ struct LecturePlayerView: View {
                 }
                 .contentShape(Rectangle())
                 .gesture(
+                    // Track the finger locally and seek once on release — seeking on every
+                    // drag sample forced a precise decode per pixel and made scrubbing lurch.
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
+                            scrubProgress = min(1, max(0, value.location.x / max(w, 1)))
+                        }
+                        .onEnded { value in
                             let p = min(1, max(0, value.location.x / max(w, 1)))
                             session.seek(to: p * max(session.duration, 1))
+                            scrubProgress = nil
                         }
                 )
             }
             .frame(height: skin.soundCloudLayout ? 56 : 44)
 
             HStack {
-                Text(Self.format(session.currentTime))
+                Text(Self.format(scrubProgress.map { $0 * session.duration } ?? session.currentTime))
                 Spacer()
                 Button {
                     withAnimation { showSync.toggle() }
@@ -656,10 +665,7 @@ struct LecturePlayerView: View {
                     }
                 }
             } label: {
-                extraChip(
-                    icon: "moon.zzz",
-                    title: session.sleep == .off ? "Sleep" : session.sleep.label
-                )
+                extraChip(icon: session.sleep == .off ? "moon.zzz" : "moon.zzz.fill", title: sleepChipTitle)
             }
 
             Button { bookmarkMoment() } label: {
@@ -702,6 +708,15 @@ struct LecturePlayerView: View {
                 }
             }
         }
+    }
+
+    /// Counts down while a timer is armed so it's obvious the app will stop on its own.
+    private var sleepChipTitle: String {
+        if let ends = session.sleepEndsAt {
+            let mins = Int((ends.timeIntervalSinceNow / 60).rounded(.up))
+            return mins > 0 ? "\(mins)m left" : "<1m"
+        }
+        return session.sleep.shortLabel
     }
 
     private func extraChip(icon: String, title: String) -> some View {

@@ -5,6 +5,15 @@ import MediaToolbox
 import Combine
 import UIKit
 
+/// Whether the full player sheet is up. Kept off `LectureAudioSession` so screens that only
+/// care about presentation (RootView's sheet, the mini bar) aren't invalidated by playback ticks.
+@MainActor
+final class LecturePlayerPresentation: ObservableObject {
+    static let shared = LecturePlayerPresentation()
+    @Published var showFull = false
+    private init() {}
+}
+
 /// One shared lecture audio engine — mini player, lock screen, queue, downloads, streak.
 @MainActor
 final class LectureAudioSession: ObservableObject {
@@ -31,6 +40,16 @@ final class LectureAudioSession: ObservableObject {
             case .m30: return "30 min"
             case .m45: return "45 min"
             case .endOfLecture: return "End of lecture"
+            }
+        }
+        /// Fits the player's chip row, where "End of lecture" would truncate.
+        var shortLabel: String {
+            switch self {
+            case .off: return "Sleep"
+            case .m15: return "15m"
+            case .m30: return "30m"
+            case .m45: return "45m"
+            case .endOfLecture: return "End"
             }
         }
         var minutes: Int? {
@@ -60,7 +79,12 @@ final class LectureAudioSession: ObservableObject {
     @Published var downloadProgress: [String: Double] = [:] // track id → 0...1 or 1 = done
     @Published var queue: [NowPlaying] = []
     @Published private(set) var listeningStreakDays = 0
-    @Published var showFullPlayer = false
+
+    /// Proxy so existing call sites keep working while the flag lives elsewhere.
+    var showFullPlayer: Bool {
+        get { LecturePlayerPresentation.shared.showFull }
+        set { LecturePlayerPresentation.shared.showFull = newValue }
+    }
 
     /// Keep at 0 — Al Qalam SRTs are timed to speech onset; a positive lead makes lines feel early.
     private let presentationLead: TimeInterval = 0
@@ -78,6 +102,10 @@ final class LectureAudioSession: ObservableObject {
     private var remoteConfigured = false
     private var lastPersistedSecond: Int = -1
     private var lastPublishedTime: TimeInterval = -1
+    private var cueLoadGeneration = 0
+    /// Unpublished playhead at the full observer rate — cue matching needs the precision
+    /// that the throttled `currentTime` no longer carries.
+    private var mediaTime: TimeInterval = 0
     /// Soft gain for quiet archive masters (BOJ ≈ −17 dB vs Seerah).
     private var gainController = LectureAudioGainController()
     private var attachedPlayerItem: AVPlayerItem?
@@ -85,8 +113,11 @@ final class LectureAudioSession: ObservableObject {
     private let streakKey = "beummati.lecture.streak"
     private let lastListenDayKey = "beummati.lecture.lastListenDay"
     private let lastSessionKey = "beummati.lecture.lastSession"
+    private let rateKey = "beummati.lecture.rate"
 
     private init() {
+        let savedRate = UserDefaults.standard.float(forKey: rateKey)
+        if Self.rates.contains(savedRate) { rate = savedRate }
         loadStreak()
         configureRemoteCommandsIfNeeded()
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [])
@@ -202,6 +233,8 @@ final class LectureAudioSession: ObservableObject {
         let cm = CMTime(seconds: time, preferredTimescale: 600)
         player?.seek(to: cm, toleranceBefore: .zero, toleranceAfter: .zero)
         currentTime = time
+        mediaTime = time
+        lastPublishedTime = time
         refreshActiveCue()
         updateNowPlayingInfo()
     }
@@ -212,6 +245,7 @@ final class LectureAudioSession: ObservableObject {
 
     func setRate(_ newRate: Float) {
         rate = newRate
+        UserDefaults.standard.set(newRate, forKey: rateKey)
         if isPlaying { player?.rate = newRate }
         // Re-map cue windows for display against wall-clock? We keep cue times in media time
         // (AVPlayer currentTime is media time, independent of rate) — no rescale needed.
@@ -246,6 +280,8 @@ final class LectureAudioSession: ObservableObject {
         rawCues = []
         activeCue = nil
         currentTime = 0
+        mediaTime = 0
+        lastPublishedTime = -1
         isReady = false
         sleep = .off
         sleepEndsAt = nil
@@ -262,8 +298,8 @@ final class LectureAudioSession: ObservableObject {
         didAutoAlign = false
         autoAlignOffset = 0
         let file = resolveFile(for: item, lang: lang)
+        // Alignment runs once the parsed cues land.
         loadCues(file: file, lang: lang)
-        alignCuesIfNeeded()
     }
 
     /// Shift subtitle timing relative to audio. Positive = show lines later (helps when SRT is ahead).
@@ -310,23 +346,51 @@ final class LectureAudioSession: ObservableObject {
         return SRTCueParser.resolveFile(track: item.track, chapter: meta, lang: lang)
     }
 
+    /// Reading + regex-parsing a full lecture SRT is tens of milliseconds of work; doing it
+    /// inline on the main actor stalled the tap that started playback. Parse off-thread and
+    /// drop results from a superseded load.
     private func loadCues(file: String?, lang: SubtitleLang) {
-        var loaded = SRTCueParser.load(named: file)
+        cueLoadGeneration += 1
+        let generation = cueLoadGeneration
+        rawCues = []
+        cues = []
+        activeCue = nil
+
+        guard let file, !file.isEmpty else {
+            subtitleSourceLabel = ""
+            return
+        }
+        subtitleSourceLabel = "Loading subtitles…"
+        Task.detached(priority: .userInitiated) { [weak self] in
+            let loaded = SRTCueParser.load(named: file)
+            guard let session = self else { return }
+            await MainActor.run {
+                session.applyLoadedCues(loaded, file: file, lang: lang, generation: generation)
+            }
+        }
+    }
+
+    private func applyLoadedCues(_ loaded: [SRTCue], file: String, lang: SubtitleLang, generation: Int) {
+        guard generation == cueLoadGeneration else { return }
+        var result = loaded
         if lang == .arabic, !loaded.isEmpty {
-            loaded = loaded.map { cue in
+            result = loaded.map { cue in
                 let filtered = Self.preferArabic(cue.text)
                 return SRTCue(id: cue.id, start: cue.start, end: cue.end, text: filtered.isEmpty ? cue.text : filtered)
             }
-            subtitleSourceLabel = "SRT · Arabic · \(loaded.count) cues"
-        } else if lang == .urdu, let file, file.lowercased().contains("urdu") || file.contains("سیرت") {
-            subtitleSourceLabel = "SRT · Urdu · \(loaded.count) cues"
-        } else if !loaded.isEmpty {
-            subtitleSourceLabel = "SRT · \(loaded.count) cues"
+            subtitleSourceLabel = "SRT · Arabic · \(result.count) cues"
+        } else if lang == .urdu, file.lowercased().contains("urdu") || file.contains("سیرت") {
+            subtitleSourceLabel = "SRT · Urdu · \(result.count) cues"
+        } else if !result.isEmpty {
+            subtitleSourceLabel = "SRT · \(result.count) cues"
         } else {
             subtitleSourceLabel = ""
         }
-        rawCues = loaded
+        rawCues = result
         applyOffsets()
+        // Duration may have arrived while we were parsing.
+        alignCuesIfNeeded()
+        synthesizeIfNeeded()
     }
 
     private static func preferArabic(_ text: String) -> String {
@@ -398,7 +462,11 @@ final class LectureAudioSession: ObservableObject {
             guard let self else { return }
             MainActor.assumeIsolated {
                 let t = time.seconds.isFinite ? time.seconds : 0
-                if abs(t - self.lastPublishedTime) >= 0.05 {
+                // Cue sync keeps the full observer rate via `mediaTime`; the published
+                // scrubber value only needs quarter-second steps, and every publish
+                // redraws every screen observing this session.
+                self.mediaTime = t
+                if abs(t - self.lastPublishedTime) >= 0.25 {
                     self.lastPublishedTime = t
                     self.currentTime = t
                 }
@@ -480,8 +548,7 @@ final class LectureAudioSession: ObservableObject {
         autoAlignOffset = result.offsetApplied
         applyOffsets()
         if result.offsetApplied != 0 {
-            let sec = Int(abs(result.offsetApplied).rounded())
-            subtitleSourceLabel += " · auto-sync −\(sec)s"
+            subtitleSourceLabel += String(format: " · auto-sync %+.0fs", result.offsetApplied)
         }
     }
 
@@ -503,7 +570,7 @@ final class LectureAudioSession: ObservableObject {
     }
 
     private func refreshActiveCue() {
-        let next = SRTCueParser.activeCue(in: cues, at: currentTime + presentationLead)
+        let next = SRTCueParser.activeCue(in: cues, at: mediaTime + presentationLead)
         if next?.id != activeCue?.id { activeCue = next }
     }
 
@@ -734,8 +801,12 @@ final class LectureAudioSession: ObservableObject {
 final class LectureAudioGainController {
     private var linearGain: Float = 1
     private var tap: MTAudioProcessingTap?
+    /// Bumped on every attach/detach so a slow track load can't install a tap for a track
+    /// the listener already skipped past.
+    private var generation = 0
 
     func detach(from item: AVPlayerItem?) {
+        generation += 1
         item?.audioMix = nil
         tap = nil
         linearGain = 1
@@ -745,14 +816,16 @@ final class LectureAudioGainController {
         detach(from: item)
         guard gainDB > 0.5 else { return }
         linearGain = pow(10, gainDB / 20)
+        let expected = generation
 
         Task { [weak self] in
-            guard let self else { return }
+            guard let controller = self else { return }
             do {
                 let tracks = try await item.asset.loadTracks(withMediaType: .audio)
                 guard let track = tracks.first else { return }
                 await MainActor.run {
-                    self.installTap(on: item, track: track)
+                    guard controller.generation == expected else { return }
+                    controller.installTap(on: item, track: track)
                 }
             } catch { }
         }

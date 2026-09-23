@@ -728,7 +728,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins;
 				PRODUCT_NAME = "Be Ummati";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -751,7 +751,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins;
 				PRODUCT_NAME = "Be Ummati";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -774,7 +774,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins.watchkitapp;
 				PRODUCT_NAME = "Be Ummati Watch App";
 				SDKROOT = watchos;
@@ -800,7 +800,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins.watchkitapp;
 				PRODUCT_NAME = "Be Ummati Watch App";
 				SDKROOT = watchos;

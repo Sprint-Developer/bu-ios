@@ -15,7 +15,6 @@ struct HomeView: View {
     @ObservedObject private var libraryProgress = LibraryProgressStore.shared
     @ObservedObject private var audio = LectureAudioSession.shared
     @ObservedObject private var listenStats = LectureListenStats.shared
-    @EnvironmentObject private var bookmarks: BookmarkStore
     @EnvironmentObject private var theme: ThemeStore
     @State private var showSettings = false
 

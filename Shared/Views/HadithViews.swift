@@ -308,7 +308,6 @@ struct HadithReaderView: View {
             TripleText(arabic: h.arabic, english: h.english, urdu: h.urdu)
             HStack {
                 BeUmmatiShareButton(kind: "Hadith", ref: ref, arabic: h.arabic, english: h.english, urdu: h.urdu)
-                ShareCardButton(kind: "Hadith", ref: ref, arabic: h.arabic, english: h.english, urdu: h.urdu)
                 GiftReminderButton(kind: "Hadith", ref: ref, arabic: h.arabic, english: h.english, urdu: h.urdu)
                 Button {
                     notes.add(title: ref, body: "\(h.arabic)\n\n\(h.english)\n\n\(h.urdu)", ref: "\(book.slug):\(h.number)", linkKind: "Hadith")

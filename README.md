@@ -3,7 +3,19 @@
 Native SwiftUI app for lectures, Al Qalam library, timed subtitles, and offline audio.
 
 **Bundle ID:** `com.codefixr.pioneerpins`  
+**Widgets:** `com.codefixr.pioneerpins.widgets`  
+**App Group:** `group.com.codefixr.beummati`  
 **Open:** `Nur.xcodeproj` in Xcode → scheme **Be Ummati**
+
+## Home Screen widgets
+
+Three WidgetKit widgets (Next Prayer, Ayah of the Day, Last Reading) live in target **Be Ummati Widgets**.
+
+The main app writes snapshots via `WidgetSnapshot` into the App Group suite (and mirrors to `UserDefaults.standard`). Until App Groups is enabled on both App IDs in the Apple Developer portal / Xcode Signing & Capabilities, widgets show placeholders.
+
+On device signing you also need App ID `com.codefixr.pioneerpins.widgets` (Apple’s free-tier App ID weekly limit can block first-time registration).
+
+Mac Catalyst builds skip the widget extension (`platformFilter = ios`).
 
 ## Install for users (important)
 

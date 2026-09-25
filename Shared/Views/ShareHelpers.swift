@@ -71,7 +71,7 @@ enum ShareText {
     }
 }
 
-/// Opens share studio with language checkboxes (text mode).
+/// Opens share studio — languages, edit text, designs (image) or plain text.
 struct BeUmmatiShareButton: View {
     @EnvironmentObject var reading: ReadingSettings
     var title: String? = nil
@@ -81,6 +81,8 @@ struct BeUmmatiShareButton: View {
     let english: String
     let urdu: String
     var label: String = "Share"
+    /// Starting tab inside the studio (user can switch Image ↔ Text).
+    var initialMode: ShareStudioMode = .image
 
     @State private var showStudio = false
 
@@ -98,7 +100,7 @@ struct BeUmmatiShareButton: View {
                 arabic: arabic,
                 english: english,
                 urdu: urdu,
-                mode: .text
+                mode: initialMode
             )
             .environmentObject(reading)
         }

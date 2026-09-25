@@ -685,7 +685,9 @@ struct LecturePlayerView: View {
                     icon: "timeline.selection",
                     title: abs(session.userSyncOffset) < 0.05
                         ? "Sync"
-                        : String(format: "%+.1fs", session.userSyncOffset)
+                        : (abs(session.userSyncOffset) >= 60
+                           ? String(format: "%+.0fs", session.userSyncOffset)
+                           : String(format: "%+.1fs", session.userSyncOffset))
                 )
             }
 
@@ -757,7 +759,9 @@ struct LecturePlayerView: View {
                 Spacer()
                 Text(abs(session.userSyncOffset) < 0.05
                      ? "Matched"
-                     : String(format: "%+.1fs", session.userSyncOffset))
+                     : (abs(session.userSyncOffset) >= 60
+                        ? String(format: "%+.0fs", session.userSyncOffset)
+                        : String(format: "%+.1fs", session.userSyncOffset)))
                     .font(.caption.monospacedDigit().weight(.bold))
                     .foregroundStyle(skin.inkSecondary)
                 if abs(session.userSyncOffset) >= 0.05 {
@@ -769,12 +773,21 @@ struct LecturePlayerView: View {
             Text("If lines appear too soon, tap Later. Saved for this series.")
                 .font(.caption2)
                 .foregroundStyle(skin.inkSecondary)
-            HStack(spacing: 8) {
-                syncNudgeButton(title: "Earlier", detail: "−1s", delta: -1)
-                syncNudgeButton(title: "−0.25", detail: nil, delta: -0.25)
-                syncNudgeButton(title: "+0.25", detail: nil, delta: 0.25)
-                syncNudgeButton(title: "Later", detail: "+1s", delta: 1)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    syncNudgeButton(title: "−10s", detail: nil, delta: -10)
+                    syncNudgeButton(title: "−5s", detail: nil, delta: -5)
+                    syncNudgeButton(title: "Earlier", detail: "−1s", delta: -1)
+                    syncNudgeButton(title: "−0.25", detail: nil, delta: -0.25)
+                    syncNudgeButton(title: "+0.25", detail: nil, delta: 0.25)
+                    syncNudgeButton(title: "Later", detail: "+1s", delta: 1)
+                    syncNudgeButton(title: "+5s", detail: nil, delta: 5)
+                    syncNudgeButton(title: "+10s", detail: nil, delta: 10)
+                }
             }
+            Text("Range ±10 min · tap value to reset.")
+                .font(.caption2)
+                .foregroundStyle(skin.inkSecondary)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -796,7 +809,7 @@ struct LecturePlayerView: View {
                 }
             }
             .foregroundStyle(skin.accent)
-            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 12)
             .padding(.vertical, 10)
             .background(skin.bgTop.opacity(0.55), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
         }

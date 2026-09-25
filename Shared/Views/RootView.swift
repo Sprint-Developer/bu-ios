@@ -218,6 +218,11 @@ struct MoreSettings: View {
 
             Section("Practice") {
                 NavigationLink {
+                    HifzView()
+                } label: {
+                    Label("Hifz", systemImage: "brain.head.profile")
+                }
+                NavigationLink {
                     SalahTrackerView(tracker: salah)
                 } label: {
                     Label("Salah tracker", systemImage: "checkmark.circle")

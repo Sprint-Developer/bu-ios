@@ -1,5 +1,6 @@
 import Foundation
 import AVFoundation
+import CoreAudio
 import MediaPlayer
 import MediaToolbox
 import Combine
@@ -219,6 +220,7 @@ final class LectureAudioSession: ObservableObject {
         } else {
             player.rate = rate
             isPlaying = true
+            updateIdleTimer()
             updateNowPlayingInfo()
         }
     }
@@ -226,6 +228,7 @@ final class LectureAudioSession: ObservableObject {
     func pause() {
         player?.pause()
         isPlaying = false
+        updateIdleTimer()
         updateNowPlayingInfo()
     }
 
@@ -308,7 +311,8 @@ final class LectureAudioSession: ObservableObject {
     }
 
     func setSyncOffset(_ value: TimeInterval) {
-        userSyncOffset = min(20, max(-20, (value * 20).rounded() / 20)) // 0.05s steps
+        // Allow large corrections (some Al Qalam SRTs drift by minutes). 0.05s steps.
+        userSyncOffset = min(600, max(-600, (value * 20).rounded() / 20))
         applyOffsets()
         if let sid = nowPlaying?.seriesID {
             Self.persistSyncOffset(userSyncOffset, for: sid)
@@ -317,6 +321,11 @@ final class LectureAudioSession: ObservableObject {
 
     func resetSyncOffset() {
         setSyncOffset(0)
+    }
+
+    /// Keep the phone screen awake while a lecture is playing (incl. sleep → end of lecture).
+    private func updateIdleTimer() {
+        UIApplication.shared.isIdleTimerDisabled = isPlaying
     }
 
     private static func syncDefaultsKey(for seriesID: String) -> String {
@@ -478,7 +487,10 @@ final class LectureAudioSession: ObservableObject {
                 }
                 self.refreshActiveCue()
                 let playing = p.rate > 0
-                if self.isPlaying != playing { self.isPlaying = playing }
+                if self.isPlaying != playing {
+                    self.isPlaying = playing
+                    self.updateIdleTimer()
+                }
                 let sec = Int(t)
                 if sec != self.lastPersistedSecond, sec % 5 == 0 {
                     self.lastPersistedSecond = sec
@@ -500,11 +512,13 @@ final class LectureAudioSession: ObservableObject {
 
         p.rate = rate
         isPlaying = true
+        updateIdleTimer()
         updateNowPlayingInfo()
     }
 
     private func itemDidFinish() {
         isPlaying = false
+        updateIdleTimer()
         activeCue = nil
         if let np = nowPlaying {
             LibraryProgressStore.shared.markCompleted(seriesID: np.seriesID, chapterID: np.chapterID)
@@ -539,6 +553,7 @@ final class LectureAudioSession: ObservableObject {
         player?.pause()
         player = nil
         isPlaying = false
+        updateIdleTimer()
     }
 
     private func alignCuesIfNeeded() {
@@ -659,7 +674,7 @@ final class LectureAudioSession: ObservableObject {
         remoteConfigured = true
         let cc = MPRemoteCommandCenter.shared()
         cc.playCommand.addTarget { [weak self] _ in
-            Task { @MainActor in self?.player?.rate = self?.rate ?? 1; self?.isPlaying = true; self?.updateNowPlayingInfo() }
+            Task { @MainActor in self?.player?.rate = self?.rate ?? 1; self?.isPlaying = true; self?.updateIdleTimer(); self?.updateNowPlayingInfo() }
             return .success
         }
         cc.pauseCommand.addTarget { [weak self] _ in

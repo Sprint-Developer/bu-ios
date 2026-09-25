@@ -65,6 +65,14 @@ final class LibraryProgressStore: ObservableObject {
         lastTouchedAt[seriesID] = Date()
         persist()
         objectWillChange.send()
+        let seriesTitle = LibraryCatalog.series(id: seriesID)?.title ?? seriesID
+        let chapterTitle = LibraryCatalog.series(id: seriesID)?.chapters?
+            .first(where: { $0.id == chapterID })?.title ?? chapterID
+        WidgetSnapshot.writeLastReading(
+            title: chapterTitle,
+            subtitle: seriesTitle,
+            kind: "library"
+        )
     }
 
     func last(for seriesID: String) -> String? {

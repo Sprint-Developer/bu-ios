@@ -15,6 +15,7 @@ struct HomeView: View {
     @ObservedObject private var libraryProgress = LibraryProgressStore.shared
     @ObservedObject private var audio = LectureAudioSession.shared
     @ObservedObject private var listenStats = LectureListenStats.shared
+    @ObservedObject private var hifz = HifzStore.shared
     @EnvironmentObject private var theme: ThemeStore
     @State private var showSettings = false
 
@@ -28,6 +29,7 @@ struct HomeView: View {
                     seriesContinueCard
                     prayerRow
                     salahStrip
+                    hifzStrip
                     reminderLanes
                     dailyPlanStrip
                 }
@@ -261,6 +263,38 @@ struct HomeView: View {
                 Spacer()
                 Text("\(today.prayedCount)/5")
                     .font(BeUmmatiTheme.ui(16, weight: .bold))
+                    .foregroundStyle(BeUmmatiTheme.teal)
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(BeUmmatiTheme.inkSecondary)
+            }
+            .padding(16)
+            .beUmmatiCard()
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var hifzStrip: some View {
+        let stats = hifz.stats
+        return NavigationLink {
+            HifzView()
+        } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Hifz")
+                        .font(BeUmmatiTheme.ui(12, weight: .bold))
+                        .foregroundStyle(BeUmmatiTheme.brass)
+                    Text(
+                        stats.memorizedCount == 0
+                            ? "Start memorizing ayahs"
+                            : "\(stats.memorizedCount) memorized · \(stats.dueTodayCount) due"
+                    )
+                    .font(BeUmmatiTheme.ui(15, weight: .semibold))
+                    .foregroundStyle(BeUmmatiTheme.ink)
+                }
+                Spacer()
+                Image(systemName: "brain.head.profile")
+                    .font(.title3)
                     .foregroundStyle(BeUmmatiTheme.teal)
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.bold))

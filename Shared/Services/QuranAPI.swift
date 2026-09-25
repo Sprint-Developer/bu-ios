@@ -90,6 +90,27 @@ actor QuranAPI {
         }
     }
 
+    /// All ayahs in a juz (parah) via quran.com `verses/by_juz/{n}` — same fields as by_chapter.
+    func ayahs(juz: Int) async throws -> [QuranAyah] {
+        var page = 1
+        var all: [QuranAyah] = []
+        let en = enID, ur = urID
+        while true {
+            let url = URL(string: "\(base)/verses/by_juz/\(juz)?language=en&translations=\(en),\(ur)&fields=\(textFields)&per_page=50&page=\(page)")!
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+            let verses = json?["verses"] as? [[String: Any]] ?? []
+            if verses.isEmpty { break }
+            for v in verses {
+                all.append(parseVerse(v, en: en, ur: ur))
+            }
+            let meta = json?["pagination"] as? [String: Any]
+            let next = meta?["next_page"] as? Int
+            if let next { page = next } else { break }
+        }
+        return all
+    }
+
     func verse(key: String) async throws -> QuranAyah {
         let parts = key.split(separator: ":")
         guard parts.count == 2, let ch = Int(parts[0]), let _ = Int(parts[1]) else { throw APIError.badURL }

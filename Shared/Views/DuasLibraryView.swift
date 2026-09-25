@@ -288,13 +288,6 @@ struct DuaDetailView: View {
                         english: dua.english,
                         urdu: ""
                     )
-                    ShareCardButton(
-                        kind: "Dua",
-                        ref: dua.reference,
-                        arabic: dua.arabic,
-                        english: dua.english,
-                        urdu: ""
-                    )
                     Button {
                         notes.add(
                             title: categoryTitle.isEmpty ? "Dua" : categoryTitle,

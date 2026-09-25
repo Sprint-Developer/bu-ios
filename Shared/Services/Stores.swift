@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import WidgetKit
 
 @MainActor
 final class ReminderStore: ObservableObject {
@@ -429,39 +430,70 @@ final class DailyPlanStore: ObservableObject {
     }
 }
 
-/// Lightweight snapshot for a future Home Screen widget (no separate App ID yet).
+/// Shared Home Screen widget payloads via App Group `group.com.codefixr.beummati`.
 enum WidgetSnapshot {
+    static let appGroupID = "group.com.codefixr.beummati"
+
+    /// App Group suite when available; always mirrors into `UserDefaults.standard` for in-app readers.
+    private static var suite: UserDefaults {
+        UserDefaults(suiteName: appGroupID) ?? .standard
+    }
+
+    private static func set(_ value: Any?, forKey key: String) {
+        let shared = suite
+        shared.set(value, forKey: key)
+        let std = UserDefaults.standard
+        if ObjectIdentifier(shared) != ObjectIdentifier(std) {
+            std.set(value, forKey: key)
+        }
+    }
+
+    private static func reload() {
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
     static func writeReminder(_ item: ReminderItem) {
-        let d = UserDefaults.standard
-        d.set(item.kind, forKey: "beummati.widget.kind")
-        d.set(item.ref, forKey: "beummati.widget.ref")
-        d.set(item.title, forKey: "beummati.widget.title")
-        d.set(item.english, forKey: "beummati.widget.english")
-        d.set(item.arabic, forKey: "beummati.widget.arabic")
-        d.set(Date().timeIntervalSince1970, forKey: "beummati.widget.updated")
+        set(item.kind, forKey: "beummati.widget.kind")
+        set(item.ref, forKey: "beummati.widget.ref")
+        set(item.title, forKey: "beummati.widget.title")
+        set(item.english, forKey: "beummati.widget.english")
+        set(item.arabic, forKey: "beummati.widget.arabic")
+        set(Date().timeIntervalSince1970, forKey: "beummati.widget.updated")
+        reload()
     }
 
     static func writeSeriesReminder(_ item: ReminderItem) {
-        let d = UserDefaults.standard
-        d.set(item.title, forKey: "beummati.seriesNotify.title")
-        d.set(item.ref, forKey: "beummati.seriesNotify.ref")
-        d.set(item.english, forKey: "beummati.seriesNotify.english")
-        d.set(item.librarySeriesID, forKey: "beummati.seriesNotify.seriesID")
-        d.set(item.libraryChapterID, forKey: "beummati.seriesNotify.chapterID")
+        set(item.title, forKey: "beummati.seriesNotify.title")
+        set(item.ref, forKey: "beummati.seriesNotify.ref")
+        set(item.english, forKey: "beummati.seriesNotify.english")
+        set(item.librarySeriesID, forKey: "beummati.seriesNotify.seriesID")
+        set(item.libraryChapterID, forKey: "beummati.seriesNotify.chapterID")
         // Prefer series text for the daily ping when available
-        d.set(item.title.isEmpty ? "Series reminder" : item.title, forKey: "beummati.widget.title")
-        d.set(item.ref, forKey: "beummati.widget.ref")
-        d.set(item.english, forKey: "beummati.widget.english")
-        d.set(item.kind, forKey: "beummati.widget.kind")
+        set(item.title.isEmpty ? "Series reminder" : item.title, forKey: "beummati.widget.title")
+        set(item.ref, forKey: "beummati.widget.ref")
+        set(item.english, forKey: "beummati.widget.english")
+        set(item.kind, forKey: "beummati.widget.kind")
+        reload()
     }
 
-    static func writePrayer(_ day: PrayerDay, nextName: String, nextTime: String) {
-        let d = UserDefaults.standard
-        d.set(day.hijriDate, forKey: "beummati.widget.hijri")
-        d.set(nextName, forKey: "beummati.widget.nextName")
-        d.set(nextTime, forKey: "beummati.widget.nextTime")
-        if let data = try? JSONEncoder().encode(day) {
-            d.set(data, forKey: "beummati.widget.prayerDay")
+    static func writePrayer(_ day: PrayerDay, nextName: String, nextTime: String, nextFire: Date? = nil) {
+        set(day.hijriDate, forKey: "beummati.widget.hijri")
+        set(nextName, forKey: "beummati.widget.nextName")
+        set(nextTime, forKey: "beummati.widget.nextTime")
+        if let nextFire {
+            set(nextFire.timeIntervalSince1970, forKey: "beummati.widget.nextFire")
         }
+        if let data = try? JSONEncoder().encode(day) {
+            set(data, forKey: "beummati.widget.prayerDay")
+        }
+        reload()
+    }
+
+    static func writeLastReading(title: String, subtitle: String, kind: String) {
+        set(title, forKey: "beummati.widget.lastTitle")
+        set(subtitle, forKey: "beummati.widget.lastSubtitle")
+        set(kind, forKey: "beummati.widget.lastKind")
+        set(Date().timeIntervalSince1970, forKey: "beummati.widget.lastUpdated")
+        reload()
     }
 }

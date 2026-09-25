@@ -21,6 +21,10 @@
 		00000000D1000000000000T6 /* RelatedVerses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000T5 /* RelatedVerses.swift */; };
 		00000000D1000000000000T8 /* QuranWords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000T7 /* QuranWords.swift */; };
 		00000000D1000000000000TA /* ShareCardViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000T9 /* ShareCardViews.swift */; };
+		00000000D1000000000000DQ2 /* DailyQuranShareCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000DQ1 /* DailyQuranShareCards.swift */; };
+		00000000D1000000000000HF2 /* HifzStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000HF1 /* HifzStore.swift */; };
+		00000000D1000000000000HF4 /* HifzView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000HF3 /* HifzView.swift */; };
+		00000000D10000000000QA02 /* QuranAyahPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000QA01 /* QuranAyahPlayer.swift */; };
 		00000000D1000000000000TC /* WordByWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000TB /* WordByWordView.swift */; };
 		00000000D1000000000000U2 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000U1 /* ThemeStore.swift */; };
 		00000000D1000000000000H2 /* HadithCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000H1 /* HadithCatalog.json */; };
@@ -99,6 +103,14 @@
 		00000000D10000000000MP02 /* MiniPlayerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000MP01 /* MiniPlayerBar.swift */; };
 		00000000D10000000000DL02 /* LibraryDeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000DL01 /* LibraryDeepLink.swift */; };
 		00000000D10000000000AI02 /* AppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000AI01 /* AppIdentity.swift */; };
+
+		00000000D1000000000000X9 /* BeUmmatiWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000X1 /* BeUmmatiWidgets.swift */; };
+		00000000D1000000000000XA /* NextPrayerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000X2 /* NextPrayerWidget.swift */; };
+		00000000D1000000000000XB /* AyahOfDayWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000X3 /* AyahOfDayWidget.swift */; };
+		00000000D1000000000000XC /* LastReadingWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000X4 /* LastReadingWidget.swift */; };
+		00000000D1000000000000XD /* WidgetShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000X5 /* WidgetShared.swift */; };
+		00000000D1000000000000XE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000X7 /* Assets.xcassets */; };
+		00000000D1000000000000XF /* Be Ummati Widgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000X0 /* Be Ummati Widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXShellScriptBuildPhase section — Expand bundled Urdu tafsir zip into app Resources */
@@ -219,6 +231,10 @@
 		00000000D1000000000000T5 /* RelatedVerses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedVerses.swift; sourceTree = "<group>"; };
 		00000000D1000000000000T7 /* QuranWords.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranWords.swift; sourceTree = "<group>"; };
 		00000000D1000000000000T9 /* ShareCardViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCardViews.swift; sourceTree = "<group>"; };
+		00000000D1000000000000DQ1 /* DailyQuranShareCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuranShareCards.swift; sourceTree = "<group>"; };
+		00000000D1000000000000HF1 /* HifzStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzStore.swift; sourceTree = "<group>"; };
+		00000000D1000000000000HF3 /* HifzView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzView.swift; sourceTree = "<group>"; };
+		00000000D10000000000QA01 /* QuranAyahPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranAyahPlayer.swift; sourceTree = "<group>"; };
 		00000000D1000000000000TB /* WordByWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordByWordView.swift; sourceTree = "<group>"; };
 		00000000D1000000000000U1 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
 		00000000D1000000000000W0 /* Be Ummati Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Be Ummati Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -263,6 +279,16 @@
 		00000000D10000000000MP01 /* MiniPlayerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MiniPlayerBar.swift"; sourceTree = "<group>"; };
 		00000000D10000000000DL01 /* LibraryDeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibraryDeepLink.swift"; sourceTree = "<group>"; };
 		00000000D10000000000AI01 /* AppIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIdentity.swift; sourceTree = "<group>"; };
+		00000000D1000000000000X0 /* Be Ummati Widgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Be Ummati Widgets.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		00000000D1000000000000X1 /* BeUmmatiWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeUmmatiWidgets.swift; sourceTree = "<group>"; };
+		00000000D1000000000000X2 /* NextPrayerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextPrayerWidget.swift; sourceTree = "<group>"; };
+		00000000D1000000000000X3 /* AyahOfDayWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AyahOfDayWidget.swift; sourceTree = "<group>"; };
+		00000000D1000000000000X4 /* LastReadingWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastReadingWidget.swift; sourceTree = "<group>"; };
+		00000000D1000000000000X5 /* WidgetShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetShared.swift; sourceTree = "<group>"; };
+		00000000D1000000000000X6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		00000000D1000000000000X7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		00000000D1000000000000X8 /* BeUmmatiWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeUmmatiWidgets.entitlements; sourceTree = "<group>"; };
+		00000000D1000000000000XQ /* BeUmmati.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BeUmmati.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -274,6 +300,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		00000000D1000000000000WG /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+
+		00000000D1000000000000XG /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -292,6 +326,18 @@
 				00000000D1000000000000WC /* Be Ummati Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+
+		00000000D1000000000000XP /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				00000000D1000000000000XF /* Be Ummati Widgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -368,6 +414,7 @@
 				00000000D100000000000027 /* iOS */,
 				00000000D100000000000028 /* Shared */,
 				00000000D1000000000000WD /* watchOS */,
+				00000000D1000000000000XR /* Widgets */,
 				00000000D100000000000026 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -377,6 +424,7 @@
 			children = (
 				00000000D10000000000001F /* Be Ummati.app */,
 				00000000D1000000000000W0 /* Be Ummati Watch App.app */,
+				00000000D1000000000000X0 /* Be Ummati Widgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -388,6 +436,7 @@
 				00000000D1000000000000F0 /* Fonts */,
 				00000000D10000000000001C /* Assets.xcassets */,
 				00000000D10000000000001E /* Info.plist */,
+				00000000D1000000000000XQ /* BeUmmati.entitlements */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -438,6 +487,8 @@
 				00000000D10000000000AS01 /* LectureAudioSession.swift */,
 				00000000D10000000000DL01 /* LibraryDeepLink.swift */,
 				00000000D10000000000AI01 /* AppIdentity.swift */,
+				00000000D1000000000000HF1 /* HifzStore.swift */,
+				00000000D10000000000QA01 /* QuranAyahPlayer.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -460,6 +511,7 @@
 				00000000D1000000000000S3 /* ScholarsQuotesView.swift */,
 				00000000D1000000000000T3 /* SalahTrackerView.swift */,
 				00000000D1000000000000T9 /* ShareCardViews.swift */,
+				00000000D1000000000000DQ1 /* DailyQuranShareCards.swift */,
 				00000000D1000000000000TB /* WordByWordView.swift */,
 				00000000D1000000000000L7 /* ReadingLibraryViews.swift */,
 				00000000D1000000000000P3 /* DuasLibraryView.swift */,
@@ -467,8 +519,25 @@
 				00000000D1000000000000UP1 /* UrduProseText.swift */,
 				00000000D10000000000PV01 /* LecturePlayerView.swift */,
 				00000000D10000000000MP01 /* MiniPlayerBar.swift */,
+				00000000D1000000000000HF3 /* HifzView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+
+		00000000D1000000000000XR /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				00000000D1000000000000X1 /* BeUmmatiWidgets.swift */,
+				00000000D1000000000000X2 /* NextPrayerWidget.swift */,
+				00000000D1000000000000X3 /* AyahOfDayWidget.swift */,
+				00000000D1000000000000X4 /* LastReadingWidget.swift */,
+				00000000D1000000000000X5 /* WidgetShared.swift */,
+				00000000D1000000000000X7 /* Assets.xcassets */,
+				00000000D1000000000000X6 /* Info.plist */,
+				00000000D1000000000000X8 /* BeUmmatiWidgets.entitlements */,
+			);
+			path = Widgets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -511,6 +580,24 @@
 			productReference = 00000000D1000000000000W0 /* Be Ummati Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
+
+		00000000D1000000000000XJ /* Be Ummati Widgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00000000D1000000000000XK /* Build configuration list for PBXNativeTarget "Be Ummati Widgets" */;
+			buildPhases = (
+				00000000D1000000000000XH /* Sources */,
+				00000000D1000000000000XG /* Frameworks */,
+				00000000D1000000000000XI /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Be Ummati Widgets";
+			productName = "Be Ummati Widgets";
+			productReference = 00000000D1000000000000X0 /* Be Ummati Widgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -538,6 +625,7 @@
 			targets = (
 				00000000D100000000000020 /* Be Ummati */,
 				00000000D1000000000000WH /* Be Ummati Watch App */,
+				00000000D1000000000000XJ /* Be Ummati Widgets */,
 			);
 		};
 /* End PBXProject section */
@@ -596,6 +684,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		00000000D1000000000000XI /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00000000D1000000000000XE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -623,6 +719,7 @@
 				00000000D1000000000000T6 /* RelatedVerses.swift in Sources */,
 				00000000D1000000000000T8 /* QuranWords.swift in Sources */,
 				00000000D1000000000000TA /* ShareCardViews.swift in Sources */,
+				00000000D1000000000000DQ2 /* DailyQuranShareCards.swift in Sources */,
 				00000000D1000000000000TC /* WordByWordView.swift in Sources */,
 				00000000D1000000000000U2 /* ThemeStore.swift in Sources */,
 				00000000D1000000000000L2 /* LibraryCatalog.swift in Sources */,
@@ -651,6 +748,9 @@
 				00000000D1000000000000E1 /* ShareHelpers.swift in Sources */,
 				00000000D1000000000000A4 /* ReadingSettingsView.swift in Sources */,
 				00000000D10000000000001B /* BeUmmatiApp.swift in Sources */,
+				00000000D1000000000000HF2 /* HifzStore.swift in Sources */,
+				00000000D1000000000000HF4 /* HifzView.swift in Sources */,
+				00000000D10000000000QA02 /* QuranAyahPlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -664,6 +764,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		00000000D1000000000000XH /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00000000D1000000000000X9 /* BeUmmatiWidgets.swift in Sources */,
+				00000000D1000000000000XA /* NextPrayerWidget.swift in Sources */,
+				00000000D1000000000000XB /* AyahOfDayWidget.swift in Sources */,
+				00000000D1000000000000XC /* LastReadingWidget.swift in Sources */,
+				00000000D1000000000000XD /* WidgetShared.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXContainerItemProxy section */
@@ -674,6 +786,14 @@
 			remoteGlobalIDString = 00000000D1000000000000WH;
 			remoteInfo = "Be Ummati Watch App";
 		};
+
+		00000000D1000000000000XN /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 00000000D100000000000021 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00000000D1000000000000XJ;
+			remoteInfo = "Be Ummati Widgets";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXTargetDependency section */
@@ -681,6 +801,15 @@
 			isa = PBXTargetDependency;
 			target = 00000000D1000000000000WH /* Be Ummati Watch App */;
 			targetProxy = 00000000D1000000000000WM /* PBXContainerItemProxy */;
+		};
+
+		00000000D1000000000000XO /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilters = (
+				ios,
+			);
+			target = 00000000D1000000000000XJ /* Be Ummati Widgets */;
+			targetProxy = 00000000D1000000000000XN /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -718,9 +847,10 @@
 		00000000D100000000000030 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = iOS/BeUmmati.entitlements;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = FZ278H2AWJ;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -728,11 +858,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins;
 				PRODUCT_NAME = "Be Ummati";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -741,9 +872,10 @@
 		00000000D100000000000031 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = iOS/BeUmmati.entitlements;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = FZ278H2AWJ;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = iOS/Info.plist;
@@ -751,11 +883,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins;
 				PRODUCT_NAME = "Be Ummati";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -766,7 +899,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = FZ278H2AWJ;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = watchOS/Info.plist;
@@ -774,7 +907,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins.watchkitapp;
 				PRODUCT_NAME = "Be Ummati Watch App";
 				SDKROOT = watchos;
@@ -792,7 +925,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = FZ278H2AWJ;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = watchOS/Info.plist;
@@ -800,7 +933,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins.watchkitapp;
 				PRODUCT_NAME = "Be Ummati Watch App";
 				SDKROOT = watchos;
@@ -810,6 +943,63 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+
+		00000000D1000000000000XL /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Widgets/BeUmmatiWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = FZ278H2AWJ;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Widgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.3.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins.widgets;
+				PRODUCT_NAME = "Be Ummati Widgets";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		00000000D1000000000000XM /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Widgets/BeUmmatiWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = FZ278H2AWJ;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Widgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.3.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codefixr.pioneerpins.widgets;
+				PRODUCT_NAME = "Be Ummati Widgets";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -839,6 +1029,15 @@
 			buildConfigurations = (
 				00000000D1000000000000WJ /* Debug */,
 				00000000D1000000000000WK /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		00000000D1000000000000XK /* Build configuration list for PBXNativeTarget "Be Ummati Widgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00000000D1000000000000XL /* Debug */,
+				00000000D1000000000000XM /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

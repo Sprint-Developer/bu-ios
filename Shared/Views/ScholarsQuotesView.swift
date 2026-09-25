@@ -158,14 +158,6 @@ struct ScholarQuoteCard: View {
                     english: quote.english,
                     urdu: quote.urdu
                 )
-                ShareCardButton(
-                    title: quote.title,
-                    kind: "Scholar",
-                    ref: quote.displayRef,
-                    arabic: quote.arabic,
-                    english: quote.english,
-                    urdu: quote.urdu
-                )
                 GiftReminderButton(
                     title: quote.title,
                     kind: "Scholar",

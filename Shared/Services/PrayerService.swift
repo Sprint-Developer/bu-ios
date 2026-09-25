@@ -140,8 +140,8 @@ final class PrayerService: NSObject, ObservableObject, CLLocationManagerDelegate
             if let encoded = try? JSONEncoder().encode(parsed) {
                 UserDefaults.standard.set(encoded, forKey: "beummati.prayer.day.cache")
             }
-            if let next = nextPrayer() {
-                WidgetSnapshot.writePrayer(parsed, nextName: next.name, nextTime: next.time)
+            if let next = nextPrayerFire() {
+                WidgetSnapshot.writePrayer(parsed, nextName: next.name, nextTime: next.time, nextFire: next.fire)
             }
             PrayerNotifications.shared.reschedule(day: parsed)
             status = usingFallbackLocation ? "Dubai times — allow location for yours" : "Updated"

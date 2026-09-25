@@ -99,14 +99,6 @@ struct ReminderLaneDetailView: View {
                         english: item.english,
                         urdu: item.urdu
                     )
-                    ShareCardButton(
-                        title: item.title.isEmpty ? nil : item.title,
-                        kind: item.kind,
-                        ref: item.ref,
-                        arabic: item.arabic,
-                        english: item.english,
-                        urdu: item.urdu
-                    )
                     GiftReminderButton(
                         title: item.title.isEmpty ? nil : item.title,
                         kind: item.kind,

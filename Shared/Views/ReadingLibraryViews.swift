@@ -670,14 +670,6 @@ struct LibraryChapterReaderView: View {
                     english: shareEn,
                     urdu: shareUr
                 )
-                ShareCardButton(
-                    title: chapter.title,
-                    kind: series.title,
-                    ref: chapter.id,
-                    arabic: shareAr,
-                    english: shareEn,
-                    urdu: shareUr
-                )
                 Button {
                     notes.add(
                         title: chapter.title,

@@ -72,6 +72,8 @@ struct ReadingLibraryView: View {
             TafsirIbnKathirUrduView()
         case .sahaba:
             SahabaStoriesView()
+        case .prophets:
+            ProphetsStoriesView()
         case .chapters:
             LibrarySeriesChaptersView(series: series)
         }
@@ -895,6 +897,114 @@ struct SahabaStoryDetailView: View {
                     BeUmmatiShareButton(title: story.title, kind: "Sahaba", ref: story.name, arabic: "", english: story.english, urdu: story.urdu)
                     Button {
                         notes.add(title: "\(story.name) — \(story.title)", body: story.english, ref: story.reference, linkKind: "Sahaba")
+                    } label: {
+                        Label("Note", systemImage: "square.and.pencil")
+                    }
+                    .buttonStyle(.plain)
+                }
+                .font(BeUmmatiTheme.ui(13, weight: .semibold))
+                .foregroundStyle(BeUmmatiTheme.teal)
+            }
+            .padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .beUmmatiScreenBackground()
+        .navigationTitle(story.name)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - Prophets
+
+struct ProphetsStoriesView: View {
+    @State private var query = ""
+    @EnvironmentObject var reading: ReadingSettings
+    @EnvironmentObject var bookmarks: BookmarkStore
+    @StateObject private var notes = NotesStore()
+
+    private var stories: [SahabaStory] {
+        let q = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let list = ProphetsLibrary.stories
+        guard !q.isEmpty else { return list }
+        return list.filter {
+            $0.name.lowercased().contains(q)
+                || $0.title.lowercased().contains(q)
+                || $0.theme.lowercased().contains(q)
+        }
+    }
+
+    var body: some View {
+        List {
+            Section {
+                Text("\(ProphetsLibrary.stories.count) short prophet stories with Qur’anic and classical references.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            ForEach(stories) { story in
+                NavigationLink {
+                    ProphetsStoryDetailView(story: story)
+                } label: {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(story.name)
+                            .font(BeUmmatiTheme.heading(17))
+                        Text(story.title)
+                            .font(BeUmmatiTheme.ui(13))
+                            .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                            .lineLimit(2)
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(BeUmmatiTheme.parchment)
+        .navigationTitle("Stories of the Prophets")
+        .searchable(text: $query, prompt: "Search prophets")
+    }
+}
+
+struct ProphetsStoryDetailView: View {
+    let story: SahabaStory
+    @EnvironmentObject var reading: ReadingSettings
+    @StateObject private var notes = NotesStore()
+
+    var body: some View {
+        ZoomableScrollView(minZoom: 1, maxZoom: 3) {
+            VStack(alignment: .leading, spacing: 14) {
+                Text(story.name)
+                    .font(BeUmmatiTheme.heading(26))
+                    .beUmmatiSelectableText()
+                Text(story.title)
+                    .font(BeUmmatiTheme.ui(14, weight: .semibold))
+                    .foregroundStyle(BeUmmatiTheme.brass)
+                    .beUmmatiSelectableText()
+                Text(story.reference)
+                    .font(BeUmmatiTheme.ui(12))
+                    .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                    .beUmmatiSelectableText()
+                if !story.urdu.isEmpty {
+                    ShapedUrduBlock(
+                        text: story.urdu,
+                        fontSize: max(reading.urduSize + 2, reading.englishSize + 2),
+                        postScriptName: reading.urduFont.postScriptName,
+                        textColor: UIColor(reading.urduColor)
+                    )
+                }
+                MixedScriptProseText(
+                    text: story.english,
+                    englishSize: reading.englishSize + 2,
+                    arabicSize: reading.englishSize + 3,
+                    arabicPostScriptName: reading.arabicFont.postScriptName,
+                    englishColor: UIColor(reading.englishColor),
+                    arabicColor: UIColor(reading.englishColor)
+                )
+                Text("Pinch to zoom · double-tap to reset · press & hold to copy")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                HStack {
+                    BeUmmatiShareButton(title: story.title, kind: "Prophets", ref: story.name, arabic: "", english: story.english, urdu: story.urdu)
+                    Button {
+                        notes.add(title: "\(story.name) — \(story.title)", body: story.english, ref: story.reference, linkKind: "Prophets")
                     } label: {
                         Label("Note", systemImage: "square.and.pencil")
                     }

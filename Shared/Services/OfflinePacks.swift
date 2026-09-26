@@ -191,11 +191,16 @@ final class OfflinePacks: ObservableObject {
             let books = HadithAPI.catalog
             let total = max(books.reduce(0) { $0 + max($1.chapters.count, 1) }, 1)
             var done = 0
+            var failures = 0
             for book in books {
                 let chapters = book.chapters.isEmpty ? [1] : book.chapters.map(\.index)
                 for ch in chapters {
                     try Task.checkCancellation()
-                    _ = try await HadithAPI.shared.chapter(book: book.slug, index: ch)
+                    do {
+                        _ = try await HadithAPI.shared.chapter(book: book.slug, index: ch)
+                    } catch {
+                        failures += 1
+                    }
                     done += 1
                     setState(id) {
                         var s = $0
@@ -204,6 +209,14 @@ final class OfflinePacks: ObservableObject {
                         return s
                     }
                 }
+            }
+            // Don't mark Ready if too many chapters failed (network / CDN outage).
+            if failures > 0 && failures * 100 / total >= 10 {
+                throw NSError(
+                    domain: "OfflinePacks",
+                    code: 1,
+                    userInfo: [NSLocalizedDescriptionKey: "Hadith pack incomplete — \(failures) / \(total) chapters failed"]
+                )
             }
         case .quranAudio:
             let pairs: [(Int, Int)] = [

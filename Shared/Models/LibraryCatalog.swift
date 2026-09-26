@@ -4,6 +4,7 @@ enum LibrarySeriesKind: String, Codable {
     case quranTafsir
     case chapters
     case sahaba
+    case prophets
 }
 
 struct LibraryChapterMeta: Identifiable, Hashable, Codable {
@@ -130,6 +131,27 @@ enum SahabaLibrary {
         let urls: [URL?] = [
             Bundle.main.url(forResource: "SahabaStories", withExtension: "json"),
             Bundle.main.url(forResource: "SahabaStories", withExtension: "json", subdirectory: "Resources")
+        ]
+        for url in urls.compactMap({ $0 }) {
+            if let data = try? Data(contentsOf: url),
+               let decoded = try? JSONDecoder().decode([SahabaStory].self, from: data) {
+                return decoded.filter {
+                    !$0.reference.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                }
+            }
+        }
+        return []
+    }
+}
+
+
+enum ProphetsLibrary {
+    static let stories: [SahabaStory] = load()
+
+    private static func load() -> [SahabaStory] {
+        let urls: [URL?] = [
+            Bundle.main.url(forResource: "ProphetsStories", withExtension: "json"),
+            Bundle.main.url(forResource: "ProphetsStories", withExtension: "json", subdirectory: "Resources")
         ]
         for url in urls.compactMap({ $0 }) {
             if let data = try? Data(contentsOf: url),

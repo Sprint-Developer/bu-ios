@@ -333,7 +333,9 @@ final class LectureAudioSession: ObservableObject {
         #if targetEnvironment(macCatalyst)
         // Mac stays awake based on system prefs; don't fight the OS.
         #else
-        UIApplication.shared.isIdleTimerDisabled = isPlaying
+        // Keep awake while playing or buffering so brief stalls don't let the screen sleep.
+        let buffering = player?.timeControlStatus == .waitingToPlayAtSpecifiedRate
+        UIApplication.shared.isIdleTimerDisabled = isPlaying || (nowPlaying != nil && buffering)
         #endif
     }
 
@@ -691,7 +693,8 @@ final class LectureAudioSession: ObservableObject {
                 self.updateIdleTimer()
                 self.updateNowPlayingInfo()
             }
-            return .success
+            // Only succeed when a player exists; otherwise leave idle timer alone.
+            return (self?.player != nil) ? .success : .noActionableNowPlayingItem
         }
         cc.pauseCommand.addTarget { [weak self] _ in
             Task { @MainActor in self?.pause() }

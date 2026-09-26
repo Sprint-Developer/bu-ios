@@ -77,6 +77,7 @@
 		00000000D1000000000000LA /* LibraryCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000L9 /* LibraryCatalog.json */; };
 		00000000D10000000000AQ02 /* AlQalamLectures.zip in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000AQ01 /* AlQalamLectures.zip */; };
 		00000000D1000000000000LC /* SahabaStories.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000LB /* SahabaStories.json */; };
+		00000000D1000000000000LE /* ProphetsStories.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000LD /* ProphetsStories.json */; };
 		00000000D10000000000F002 /* seerah-anwar__madinah1-01.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000F001 /* seerah-anwar__madinah1-01.json */; };
 		00000000D10000000000F012 /* seerah-anwar__madinah1-05.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000F011 /* seerah-anwar__madinah1-05.json */; };
 		00000000D10000000000F022 /* seerah-anwar__makkan-01.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000F021 /* seerah-anwar__makkan-01.json */; };
@@ -255,6 +256,7 @@
 		00000000D1000000000000L9 /* LibraryCatalog.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "LibraryCatalog.json"; sourceTree = "<group>"; };
 		00000000D10000000000AQ01 /* AlQalamLectures.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = AlQalamLectures.zip; sourceTree = "<group>"; };
 		00000000D1000000000000LB /* SahabaStories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "SahabaStories.json"; sourceTree = "<group>"; };
+		00000000D1000000000000LD /* ProphetsStories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "ProphetsStories.json"; sourceTree = "<group>"; };
 		00000000D10000000000F001 /* seerah-anwar__madinah1-01.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "seerah-anwar__madinah1-01.json"; sourceTree = "<group>"; };
 		00000000D10000000000F011 /* seerah-anwar__madinah1-05.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "seerah-anwar__madinah1-05.json"; sourceTree = "<group>"; };
 		00000000D10000000000F021 /* seerah-anwar__makkan-01.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "seerah-anwar__makkan-01.json"; sourceTree = "<group>"; };
@@ -369,6 +371,7 @@
 				00000000D10000000000AU03 /* LectureAudioCatalog.json */,
 				00000000D10000000000AQ01 /* AlQalamLectures.zip */,
 				00000000D1000000000000LB /* SahabaStories.json */,
+				00000000D1000000000000LD /* ProphetsStories.json */,
 				00000000D1000000000000P5 /* HisnAlMuslim.json */,
 				00000000D10000000000A051 /* anwar-seerah-makkan__makkan-16.json */,
 				00000000D10000000000A041 /* anwar-seerah-makkan__makkan-08.json */,
@@ -647,6 +650,7 @@
 				00000000D1000000000000LA /* LibraryCatalog.json in Resources */,
 				00000000D10000000000AU04 /* LectureAudioCatalog.json in Resources */,
 				00000000D1000000000000LC /* SahabaStories.json in Resources */,
+				00000000D1000000000000LE /* ProphetsStories.json in Resources */,
 				00000000D1000000000000P6 /* HisnAlMuslim.json in Resources */,
 				00000000D10000000000A052 /* anwar-seerah-makkan__makkan-16.json in Resources */,
 				00000000D10000000000A042 /* anwar-seerah-makkan__makkan-08.json in Resources */,

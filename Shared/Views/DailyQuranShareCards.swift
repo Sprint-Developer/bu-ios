@@ -296,6 +296,9 @@ struct SharePalette: Equatable {
 
     var usesFlatBackground: Bool { background != nil }
 
+    /// True when a background tint is applied on top of the template (design stays).
+    var hasBackgroundTint: Bool { background != nil }
+
     static let design = SharePalette()
 
     static let presets: [(label: String, palette: SharePalette)] = [
@@ -386,65 +389,35 @@ struct DailyQuranShareCard: View {
 
     var body: some View {
         ZStack {
-            if palette.usesFlatBackground {
-                flatCustomCard
-            } else {
-                switch style {
-                case .mihrab: mihrab
-                case .folio: folio
-                case .fajr: fajr
-                case .kuficCircuit: kufic
-                case .inkBloom: inkBloom
-                case .zellijStack: zellij
-                case .jadeVelvet: jade
-                case .cyanotype: cyanotype
-                case .basalt: basalt
-                case .nacre: nacre
-                case .terrazzoBone: terrazzo
-                case .oxbloodTazhib: oxblood
-                case .contourTide: contour
-                case .risoDuo: riso
-                case .nightGirih: girih
-                }
+            // Always keep the template design; colour presets / BG only recolour it.
+            switch style {
+            case .mihrab: mihrab
+            case .folio: folio
+            case .fajr: fajr
+            case .kuficCircuit: kufic
+            case .inkBloom: inkBloom
+            case .zellijStack: zellij
+            case .jadeVelvet: jade
+            case .cyanotype: cyanotype
+            case .basalt: basalt
+            case .nacre: nacre
+            case .terrazzoBone: terrazzo
+            case .oxbloodTazhib: oxblood
+            case .contourTide: contour
+            case .risoDuo: riso
+            case .nightGirih: girih
+            }
+
+            // Tint atmosphere toward the chosen background; keep ornaments + text colours.
+            if let bg = palette.background {
+                bg
+                    .opacity(0.48)
+                    .blendMode(.overlay)
+                    .allowsHitTesting(false)
             }
         }
         .frame(width: DQShare.W, height: DQShare.H)
         .clipped()
-    }
-
-    /// Fully colour-controlled layout when a background override is set.
-    private var flatCustomCard: some View {
-        let bg = palette.background ?? DQShare.color(0x0B1220)
-        let arC = palette.arabic ?? DQShare.color(0xF2EDE1)
-        let urC = palette.urdu ?? arC.opacity(0.9)
-        let enC = palette.english ?? DQShare.color(0xC79A4B)
-        let refC = palette.reference ?? arC.opacity(0.55)
-        let brandC = palette.brand ?? enC
-        return ZStack {
-            bg
-            VStack(spacing: 0) {
-                if !ref.isEmpty {
-                    Text(ref.uppercased())
-                        .font(DQShare.sans(18, bold: true))
-                        .tracking(2)
-                        .foregroundStyle(refC)
-                        .multilineTextAlignment(.center)
-                        .padding(.top, 72)
-                        .padding(.horizontal, 64)
-                }
-                Spacer(minLength: 40)
-                centeredStack(
-                    arColor: arC, urColor: urC, enColor: enC,
-                    sep: brandC, showSep: true, maxWidth: 820
-                )
-                .padding(.horizontal, 56)
-                Spacer(minLength: 40)
-                if showBrand {
-                    brandLine(brandC)
-                        .padding(.bottom, 56)
-                }
-            }
-        }
     }
 
     // MARK: Mihrab

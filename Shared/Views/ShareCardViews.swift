@@ -293,8 +293,8 @@ struct ShareCardStudioView: View {
                             }
                             .padding(.horizontal)
                         }
-                        Text(palette.usesFlatBackground
-                             ? "Custom background · logo & text colours apply"
+                        Text(palette.hasBackgroundTint
+                             ? "Background tint · design template kept"
                              : "Design art · override text / logo colours below")
                             .font(.caption)
                             .foregroundStyle(.secondary)

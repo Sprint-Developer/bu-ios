@@ -25,6 +25,8 @@
 		00000000D1000000000000HF2 /* HifzStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000HF1 /* HifzStore.swift */; };
 		00000000D1000000000000HF4 /* HifzView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000HF3 /* HifzView.swift */; };
 		00000000D10000000000QA02 /* QuranAyahPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000QA01 /* QuranAyahPlayer.swift */; };
+		00000000D10000000000AC02 /* QuranAudioCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000AC01 /* QuranAudioCache.swift */; };
+		00000000D10000000000OP02 /* OfflinePacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D10000000000OP01 /* OfflinePacks.swift */; };
 		00000000D1000000000000TC /* WordByWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000TB /* WordByWordView.swift */; };
 		00000000D1000000000000U2 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000U1 /* ThemeStore.swift */; };
 		00000000D1000000000000H2 /* HadithCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 00000000D1000000000000H1 /* HadithCatalog.json */; };
@@ -235,6 +237,8 @@
 		00000000D1000000000000HF1 /* HifzStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzStore.swift; sourceTree = "<group>"; };
 		00000000D1000000000000HF3 /* HifzView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzView.swift; sourceTree = "<group>"; };
 		00000000D10000000000QA01 /* QuranAyahPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranAyahPlayer.swift; sourceTree = "<group>"; };
+		00000000D10000000000AC01 /* QuranAudioCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranAudioCache.swift; sourceTree = "<group>"; };
+		00000000D10000000000OP01 /* OfflinePacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflinePacks.swift; sourceTree = "<group>"; };
 		00000000D1000000000000TB /* WordByWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordByWordView.swift; sourceTree = "<group>"; };
 		00000000D1000000000000U1 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
 		00000000D1000000000000W0 /* Be Ummati Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Be Ummati Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -489,6 +493,8 @@
 				00000000D10000000000AI01 /* AppIdentity.swift */,
 				00000000D1000000000000HF1 /* HifzStore.swift */,
 				00000000D10000000000QA01 /* QuranAyahPlayer.swift */,
+				00000000D10000000000AC01 /* QuranAudioCache.swift */,
+				00000000D10000000000OP01 /* OfflinePacks.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -751,6 +757,8 @@
 				00000000D1000000000000HF2 /* HifzStore.swift in Sources */,
 				00000000D1000000000000HF4 /* HifzView.swift in Sources */,
 				00000000D10000000000QA02 /* QuranAyahPlayer.swift in Sources */,
+				00000000D10000000000AC02 /* QuranAudioCache.swift in Sources */,
+				00000000D10000000000OP02 /* OfflinePacks.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

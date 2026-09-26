@@ -91,24 +91,60 @@ actor QuranAPI {
     }
 
     /// All ayahs in a juz (parah) via quran.com `verses/by_juz/{n}` — same fields as by_chapter.
+    /// Falls back to assembling from offline surah cache when the network fails.
     func ayahs(juz: Int) async throws -> [QuranAyah] {
-        var page = 1
-        var all: [QuranAyah] = []
-        let en = enID, ur = urID
-        while true {
-            let url = URL(string: "\(base)/verses/by_juz/\(juz)?language=en&translations=\(en),\(ur)&fields=\(textFields)&per_page=50&page=\(page)")!
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-            let verses = json?["verses"] as? [[String: Any]] ?? []
-            if verses.isEmpty { break }
-            for v in verses {
-                all.append(parseVerse(v, en: en, ur: ur))
+        do {
+            var page = 1
+            var all: [QuranAyah] = []
+            let en = enID, ur = urID
+            while true {
+                let url = URL(string: "\(base)/verses/by_juz/\(juz)?language=en&translations=\(en),\(ur)&fields=\(textFields)&per_page=50&page=\(page)")!
+                let (data, _) = try await URLSession.shared.data(from: url)
+                let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+                let verses = json?["verses"] as? [[String: Any]] ?? []
+                if verses.isEmpty { break }
+                for v in verses {
+                    all.append(parseVerse(v, en: en, ur: ur))
+                }
+                let meta = json?["pagination"] as? [String: Any]
+                let next = meta?["next_page"] as? Int
+                if let next { page = next } else { break }
             }
-            let meta = json?["pagination"] as? [String: Any]
-            let next = meta?["next_page"] as? Int
-            if let next { page = next } else { break }
+            if !all.isEmpty { return all }
+            if let cached = await ayahsFromSurahCache(juz: juz) { return cached }
+            return all
+        } catch {
+            if let cached = await ayahsFromSurahCache(juz: juz) { return cached }
+            throw error
         }
-        return all
+    }
+
+    /// Rebuild a juz from cached surah files (full/starter Qur’an offline pack).
+    private func ayahsFromSurahCache(juz: Int) async -> [QuranAyah]? {
+        guard let info = JuzCatalog.get(juz) else { return nil }
+        guard let start = parseKey(info.startKey), let end = parseKey(info.endKey) else { return nil }
+        let en = enID, ur = urID
+        var out: [QuranAyah] = []
+        for surah in start.0...end.0 {
+            var ayahs = await OfflineCache.shared.loadAyahs(chapter: surah, en: en, ur: ur)
+            if ayahs == nil {
+                ayahs = await OfflineCache.shared.loadAyahs(chapter: surah)
+            }
+            guard let ayahs else { return nil }
+            for ayah in ayahs {
+                let n = ayah.numberInSurah
+                if surah == start.0 && n < start.1 { continue }
+                if surah == end.0 && n > end.1 { continue }
+                out.append(ayah)
+            }
+        }
+        return out.isEmpty ? nil : out
+    }
+
+    private func parseKey(_ key: String) -> (Int, Int)? {
+        let parts = key.split(separator: ":")
+        guard parts.count == 2, let s = Int(parts[0]), let a = Int(parts[1]) else { return nil }
+        return (s, a)
     }
 
     func verse(key: String) async throws -> QuranAyah {

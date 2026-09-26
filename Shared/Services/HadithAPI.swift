@@ -168,11 +168,15 @@ actor HadithAPI {
         }
     }
 
-    /// Correct path: editions/{edition}/sections/{kitab}.json
+    /// Correct path: editions/{edition}/sections/{kitab}.json — disk-cached for offline packs.
     private func fetchSectionEdition(_ edition: String, section: Int) async throws -> [RawHadith] {
+        if let cached = await OfflineCache.shared.loadHadithData(edition: edition, section: section) {
+            return parseHadiths(cached)
+        }
         let url = URL(string: "\(base)/editions/\(edition)/sections/\(section).json")!
         let (data, resp) = try await URLSession.shared.data(from: url)
         guard let http = resp as? HTTPURLResponse, http.statusCode == 200 else { return [] }
+        await OfflineCache.shared.saveHadithData(data, edition: edition, section: section)
         return parseHadiths(data)
     }
 

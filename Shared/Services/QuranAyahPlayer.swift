@@ -2,7 +2,7 @@ import Foundation
 import AVFoundation
 import Combine
 
-/// Minimal ayah-by-ayah player (everyayah.com Arabic). Mirrors Android `QuranAyahPlayer` without offline cache / translation TTS.
+/// Ayah-by-ayah player (everyayah.com Arabic) with optional local Alafasy cache.
 @MainActor
 final class QuranAyahPlayer: ObservableObject {
     static let shared = QuranAyahPlayer()
@@ -27,6 +27,7 @@ final class QuranAyahPlayer: ObservableObject {
     private var ayahs: [QuranAyah] = []
     private var index = 0
     private var autoAdvance = true
+    private var playGeneration = 0
 
     private init() {}
 
@@ -70,6 +71,7 @@ final class QuranAyahPlayer: ObservableObject {
     }
 
     func stop() {
+        playGeneration += 1
         clearEndObserver()
         player?.pause()
         player?.replaceCurrentItem(with: nil)
@@ -84,10 +86,6 @@ final class QuranAyahPlayer: ObservableObject {
             stop()
             return
         }
-        guard let url = Self.arabicURL(surah: ayah.surah, ayah: ayah.numberInSurah) else {
-            state = PlayState(surah: ayah.surah, ayah: ayah.numberInSurah, key: ayah.key, error: "Bad audio URL")
-            return
-        }
 
         state = PlayState(
             surah: ayah.surah,
@@ -97,6 +95,28 @@ final class QuranAyahPlayer: ObservableObject {
             loading: true
         )
 
+        playGeneration += 1
+        let generation = playGeneration
+        let surah = ayah.surah
+        let number = ayah.numberInSurah
+
+        Task {
+            let url: URL?
+            if let local = await QuranAudioCache.shared.existingArabic(surah: surah, ayah: number) {
+                url = local
+            } else {
+                url = Self.arabicURL(surah: surah, ayah: number)
+            }
+            guard generation == playGeneration else { return }
+            guard let url else {
+                state = PlayState(surah: surah, ayah: number, key: ayah.key, error: "Bad audio URL")
+                return
+            }
+            startPlayback(url: url, ayah: ayah)
+        }
+    }
+
+    private func startPlayback(url: URL, ayah: QuranAyah) {
         configureSession()
         clearEndObserver()
 
@@ -119,6 +139,9 @@ final class QuranAyahPlayer: ObservableObject {
         state.loading = false
         state.playing = true
         state.error = nil
+        state.surah = ayah.surah
+        state.ayah = ayah.numberInSurah
+        state.key = ayah.key
     }
 
     private func onClipEnded() {

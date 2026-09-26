@@ -283,6 +283,81 @@ private extension UIImage {
     }
 }
 
+// MARK: - Real colour palette (text / bg / logo — not a saturation grade)
+
+struct SharePalette: Equatable {
+    var background: Color? = nil
+    var arabic: Color? = nil
+    var english: Color? = nil
+    var urdu: Color? = nil
+    var reference: Color? = nil
+    var brand: Color? = nil
+    var brandText: String = "BE UMMATI"
+
+    var usesFlatBackground: Bool { background != nil }
+
+    static let design = SharePalette()
+
+    static let presets: [(label: String, palette: SharePalette)] = [
+        ("Design", .design),
+        ("Night", SharePalette(
+            background: DQShare.color(0x0B1220),
+            arabic: DQShare.color(0xF2F4F8),
+            english: DQShare.color(0xC9A24A),
+            urdu: DQShare.color(0xCBD9E2),
+            reference: DQShare.color(0x93A0B8),
+            brand: DQShare.color(0xC9A24A)
+        )),
+        ("Ivory", SharePalette(
+            background: DQShare.color(0xF4F1EA),
+            arabic: DQShare.color(0x14161A),
+            english: DQShare.color(0x2B3A67),
+            urdu: DQShare.color(0x1A1A1A),
+            reference: DQShare.color(0x6C7570),
+            brand: DQShare.color(0xB23A2E)
+        )),
+        ("Emerald", SharePalette(
+            background: DQShare.color(0x0B5A45),
+            arabic: DQShare.color(0xE7D7A8),
+            english: DQShare.color(0xF2EDE1),
+            urdu: DQShare.color(0xC4CFC6),
+            reference: DQShare.color(0x9BC3AE),
+            brand: DQShare.color(0xE7D7A8)
+        )),
+        ("Brass", SharePalette(
+            background: DQShare.color(0x1A1208),
+            arabic: DQShare.color(0xE7D7A8),
+            english: DQShare.color(0xC79A4B),
+            urdu: DQShare.color(0xD8C9A8),
+            reference: DQShare.color(0xA89060),
+            brand: DQShare.color(0xC79A4B)
+        )),
+        ("Rose", SharePalette(
+            background: DQShare.color(0x4A0F16),
+            arabic: DQShare.color(0xF0E6D2),
+            english: DQShare.color(0xD4AF5A),
+            urdu: DQShare.color(0xE8DCC8),
+            reference: DQShare.color(0xC9A24A),
+            brand: DQShare.color(0xD4AF5A)
+        )),
+        ("Ocean", SharePalette(
+            background: DQShare.color(0x0A2A43),
+            arabic: DQShare.color(0xF7F9FA),
+            english: DQShare.color(0xD9A441),
+            urdu: DQShare.color(0xCBD9E2),
+            reference: DQShare.color(0x7FE0C4),
+            brand: DQShare.color(0xCBD9E2)
+        ))
+    ]
+
+    static let swatches: [Color] = [
+        DQShare.color(0xF2EDE1), DQShare.color(0xF4F1EA), DQShare.color(0xE6E3DC), DQShare.color(0xCBD9E2),
+        DQShare.color(0x14161A), DQShare.color(0x0B1220), DQShare.color(0x060D0C), DQShare.color(0x4A0F16),
+        DQShare.color(0x0B5A45), DQShare.color(0x0A2A43), DQShare.color(0x1B4B8F), DQShare.color(0x2B3EE0),
+        DQShare.color(0xC79A4B), DQShare.color(0xD4AF5A), DQShare.color(0xB23A2E), DQShare.color(0xFF5A36)
+    ]
+}
+
 // MARK: - Main card
 
 struct DailyQuranShareCard: View {
@@ -296,6 +371,7 @@ struct DailyQuranShareCard: View {
     var showUrdu: Bool = true
     var showBrand: Bool = true
     var showReference: Bool = true
+    var palette: SharePalette = .design
 
     private var fitHideArabic: Bool {
         DQShare.translationOnly(arabic: arabic, english: english) && showEnglish
@@ -310,26 +386,65 @@ struct DailyQuranShareCard: View {
 
     var body: some View {
         ZStack {
-            switch style {
-            case .mihrab: mihrab
-            case .folio: folio
-            case .fajr: fajr
-            case .kuficCircuit: kufic
-            case .inkBloom: inkBloom
-            case .zellijStack: zellij
-            case .jadeVelvet: jade
-            case .cyanotype: cyanotype
-            case .basalt: basalt
-            case .nacre: nacre
-            case .terrazzoBone: terrazzo
-            case .oxbloodTazhib: oxblood
-            case .contourTide: contour
-            case .risoDuo: riso
-            case .nightGirih: girih
+            if palette.usesFlatBackground {
+                flatCustomCard
+            } else {
+                switch style {
+                case .mihrab: mihrab
+                case .folio: folio
+                case .fajr: fajr
+                case .kuficCircuit: kufic
+                case .inkBloom: inkBloom
+                case .zellijStack: zellij
+                case .jadeVelvet: jade
+                case .cyanotype: cyanotype
+                case .basalt: basalt
+                case .nacre: nacre
+                case .terrazzoBone: terrazzo
+                case .oxbloodTazhib: oxblood
+                case .contourTide: contour
+                case .risoDuo: riso
+                case .nightGirih: girih
+                }
             }
         }
         .frame(width: DQShare.W, height: DQShare.H)
         .clipped()
+    }
+
+    /// Fully colour-controlled layout when a background override is set.
+    private var flatCustomCard: some View {
+        let bg = palette.background ?? DQShare.color(0x0B1220)
+        let arC = palette.arabic ?? DQShare.color(0xF2EDE1)
+        let urC = palette.urdu ?? arC.opacity(0.9)
+        let enC = palette.english ?? DQShare.color(0xC79A4B)
+        let refC = palette.reference ?? arC.opacity(0.55)
+        let brandC = palette.brand ?? enC
+        return ZStack {
+            bg
+            VStack(spacing: 0) {
+                if !ref.isEmpty {
+                    Text(ref.uppercased())
+                        .font(DQShare.sans(18, bold: true))
+                        .tracking(2)
+                        .foregroundStyle(refC)
+                        .multilineTextAlignment(.center)
+                        .padding(.top, 72)
+                        .padding(.horizontal, 64)
+                }
+                Spacer(minLength: 40)
+                centeredStack(
+                    arColor: arC, urColor: urC, enColor: enC,
+                    sep: brandC, showSep: true, maxWidth: 820
+                )
+                .padding(.horizontal, 56)
+                Spacer(minLength: 40)
+                if showBrand {
+                    brandLine(brandC)
+                        .padding(.bottom, 56)
+                }
+            }
+        }
     }
 
     // MARK: Mihrab
@@ -1288,11 +1403,15 @@ struct DailyQuranShareCard: View {
         sep: Color, showSep: Bool, maxWidth: CGFloat,
         arBoost: CGFloat = 0
     ) -> some View {
+        let a = palette.arabic ?? arColor
+        let u = palette.urdu ?? urColor
+        let e = palette.english ?? enColor
+        let s = palette.brand ?? sep
         VStack(spacing: 22) {
             if !ar.isEmpty {
                 Text(ar)
                     .font(DQShare.uthmani(sz.ar + arBoost))
-                    .foregroundStyle(arColor)
+                    .foregroundStyle(a)
                     .multilineTextAlignment(.center)
                     .lineSpacing(10)
                     .minimumScaleFactor(0.65)
@@ -1300,15 +1419,15 @@ struct DailyQuranShareCard: View {
             }
             if showSep && !ar.isEmpty && (!ur.isEmpty || !en.isEmpty) {
                 HStack(spacing: 14) {
-                    Rectangle().fill(sep.opacity(0.47)).frame(width: 66, height: 2)
-                    Circle().fill(sep.opacity(0.47)).frame(width: 10, height: 10)
-                    Rectangle().fill(sep.opacity(0.47)).frame(width: 66, height: 2)
+                    Rectangle().fill(s.opacity(0.47)).frame(width: 66, height: 2)
+                    Circle().fill(s.opacity(0.47)).frame(width: 10, height: 10)
+                    Rectangle().fill(s.opacity(0.47)).frame(width: 66, height: 2)
                 }
             }
             if !ur.isEmpty {
                 Text(ur)
                     .font(DQShare.nastaliq(sz.ur))
-                    .foregroundStyle(urColor.opacity(0.9))
+                    .foregroundStyle(u.opacity(0.9))
                     .multilineTextAlignment(.center)
                     .lineSpacing(8)
                     .minimumScaleFactor(0.7)
@@ -1317,7 +1436,7 @@ struct DailyQuranShareCard: View {
             if !en.isEmpty {
                 Text(en)
                     .font(DQShare.serif(sz.en))
-                    .foregroundStyle(enColor)
+                    .foregroundStyle(e)
                     .multilineTextAlignment(.center)
                     .lineSpacing(6)
                     .minimumScaleFactor(0.75)
@@ -1328,10 +1447,10 @@ struct DailyQuranShareCard: View {
     }
 
     private func brandLine(_ color: Color) -> some View {
-        Text("BE UMMATI")
+        Text(palette.brandText.uppercased())
             .font(DQShare.sans(16, bold: true))
             .tracking(4)
-            .foregroundStyle(color)
+            .foregroundStyle(palette.brand ?? color)
     }
 }
 

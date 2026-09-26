@@ -52,6 +52,7 @@ struct ShareCardView: View {
     var showBrand: Bool = true
     var showSlogan: Bool = true
     var showReference: Bool = true
+    var palette: SharePalette = .design
 
     var body: some View {
         DailyQuranShareCard(
@@ -64,7 +65,8 @@ struct ShareCardView: View {
             showEnglish: showEnglish,
             showUrdu: showUrdu,
             showBrand: showBrand,
-            showReference: showReference
+            showReference: showReference,
+            palette: palette
         )
     }
 }
@@ -131,7 +133,8 @@ struct ShareCardStudioView: View {
 
     @State private var activeMode: ShareStudioMode = .image
     @State private var style: ShareCardStyle = .mihrab
-    @State private var colorMood: ShareColorMood = .default
+    @State private var palette: SharePalette = .design
+    @State private var palettePresetLabel: String = "Design"
 
     @State private var includeArabic = true
     @State private var includeEnglish = true
@@ -281,21 +284,61 @@ struct ShareCardStudioView: View {
                             .foregroundStyle(.secondary)
                             .padding(.horizontal, 20)
 
-                        sectionHeader("Colour")
+                        sectionHeader("Colours")
                         ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 14) {
-                                ForEach(ShareColorMood.allCases) { m in
-                                    colorMoodChip(m)
+                            HStack(spacing: 12) {
+                                ForEach(SharePalette.presets, id: \.label) { item in
+                                    palettePresetChip(item.label, item.palette)
                                 }
                             }
                             .padding(.horizontal)
                         }
-                        Text(colorMood == .default
-                             ? "Original design colours"
-                             : "\(colorMood.label) grade on \(style.label)")
+                        Text(palette.usesFlatBackground
+                             ? "Custom background · logo & text colours apply"
+                             : "Design art · override text / logo colours below")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .padding(.horizontal, 20)
+
+                        VStack(alignment: .leading, spacing: 12) {
+                            colourRoleRow("Background", color: $palette.background, allowClear: true)
+                            colourRoleRow("Arabic", color: Binding(
+                                get: { palette.arabic },
+                                set: { palette.arabic = $0 }
+                            ), allowClear: true)
+                            colourRoleRow("English", color: Binding(
+                                get: { palette.english },
+                                set: { palette.english = $0 }
+                            ), allowClear: true)
+                            colourRoleRow("Urdu", color: Binding(
+                                get: { palette.urdu },
+                                set: { palette.urdu = $0 }
+                            ), allowClear: true)
+                            colourRoleRow("Logo", color: Binding(
+                                get: { palette.brand },
+                                set: { palette.brand = $0 }
+                            ), allowClear: true)
+
+                            HStack {
+                                Text("Logo text")
+                                    .font(.subheadline.weight(.semibold))
+                                TextField("BE UMMATI", text: $palette.brandText)
+                                    .textInputAutocapitalization(.characters)
+                                    .font(.subheadline.weight(.bold))
+                                    .multilineTextAlignment(.trailing)
+                            }
+                            .padding(.horizontal, 4)
+
+                            Button("Reset colours to design") {
+                                palette = .design
+                                palettePresetLabel = "Design"
+                                scheduleRender(immediate: true)
+                            }
+                            .font(.caption.weight(.semibold))
+                        }
+                        .padding(14)
+                        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .padding(.horizontal)
 
                         if preparing {
                             ProgressView("Rendering…")
@@ -349,7 +392,13 @@ struct ShareCardStudioView: View {
                         reading.shareEnglish = includeEnglish
                         reading.shareUrdu = includeUrdu
                         UserDefaults.standard.set(style.rawValue, forKey: "beummati.shareStyle")
-                        UserDefaults.standard.set(colorMood.rawValue, forKey: "beummati.shareColorMood")
+                        UserDefaults.standard.set(palettePresetLabel, forKey: "beummati.sharePalettePreset")
+                        UserDefaults.standard.set(palette.brandText, forKey: "beummati.shareBrandText")
+                        Self.storeOptionalColor(palette.background, key: "beummati.sharePal.bg")
+                        Self.storeOptionalColor(palette.arabic, key: "beummati.sharePal.ar")
+                        Self.storeOptionalColor(palette.english, key: "beummati.sharePal.en")
+                        Self.storeOptionalColor(palette.urdu, key: "beummati.sharePal.ur")
+                        Self.storeOptionalColor(palette.brand, key: "beummati.sharePal.brand")
                     }
                     .font(.footnote.weight(.semibold))
                     .frame(maxWidth: .infinity)
@@ -373,10 +422,19 @@ struct ShareCardStudioView: View {
                 } else {
                     style = ShareCardStyle.preferred(for: kind)
                 }
-                if let savedMood = UserDefaults.standard.string(forKey: "beummati.shareColorMood"),
-                   let m = ShareColorMood(rawValue: savedMood) {
-                    colorMood = m
+                if let preset = UserDefaults.standard.string(forKey: "beummati.sharePalettePreset"),
+                   let match = SharePalette.presets.first(where: { $0.label == preset }) {
+                    palette = match.palette
+                    palettePresetLabel = match.label
                 }
+                if let brand = UserDefaults.standard.string(forKey: "beummati.shareBrandText"), !brand.isEmpty {
+                    palette.brandText = brand
+                }
+                if let bg = Self.loadOptionalColor(key: "beummati.sharePal.bg") { palette.background = bg }
+                if let ar = Self.loadOptionalColor(key: "beummati.sharePal.ar") { palette.arabic = ar }
+                if let en = Self.loadOptionalColor(key: "beummati.sharePal.en") { palette.english = en }
+                if let ur = Self.loadOptionalColor(key: "beummati.sharePal.ur") { palette.urdu = ur }
+                if let br = Self.loadOptionalColor(key: "beummati.sharePal.brand") { palette.brand = br }
                 includeArabic = reading.shareArabic && hasArabic
                 includeEnglish = reading.shareEnglish && hasEnglish
                 includeUrdu = reading.shareUrdu && hasUrdu
@@ -392,7 +450,7 @@ struct ShareCardStudioView: View {
             }
             .onChange(of: activeMode) { _, _ in scheduleRender(immediate: true) }
             .onChange(of: style) { _, _ in scheduleRender(immediate: true) }
-            .onChange(of: colorMood) { _, _ in scheduleRender(immediate: true) }
+            .onChange(of: palette) { _, _ in scheduleRender(immediate: true) }
             .onChange(of: includeArabic) { _, _ in scheduleRender(immediate: true) }
             .onChange(of: includeEnglish) { _, _ in scheduleRender(immediate: true) }
             .onChange(of: includeUrdu) { _, _ in scheduleRender(immediate: true) }
@@ -485,20 +543,32 @@ struct ShareCardStudioView: View {
         .accessibilityAddTraits(selected ? .isSelected : [])
     }
 
-    private func colorMoodChip(_ m: ShareColorMood) -> some View {
-        let selected = colorMood == m
+    private func palettePresetChip(_ label: String, _ p: SharePalette) -> some View {
+        let selected = palettePresetLabel == label
         return Button {
-            colorMood = m
+            palettePresetLabel = label
+            var next = p
+            next.brandText = palette.brandText
+            palette = next
         } label: {
             VStack(spacing: 6) {
-                Circle()
-                    .fill(m.swatch)
-                    .frame(width: 36, height: 36)
-                    .overlay(
-                        Circle()
-                            .stroke(selected ? BeUmmatiShare.brandRed : Color.primary.opacity(0.15), lineWidth: selected ? 2.5 : 1)
-                    )
-                Text(m.label)
+                ZStack {
+                    if let bg = p.background {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(bg)
+                    } else {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(
+                                LinearGradient(colors: style.swatch, startPoint: .topLeading, endPoint: .bottomTrailing)
+                            )
+                    }
+                }
+                .frame(width: 52, height: 64)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .stroke(selected ? BeUmmatiShare.brandRed : Color.primary.opacity(0.12), lineWidth: selected ? 2.5 : 1)
+                )
+                Text(label)
                     .font(.caption2.weight(selected ? .bold : .medium))
                     .foregroundStyle(selected ? .primary : .secondary)
                     .lineLimit(1)
@@ -506,8 +576,62 @@ struct ShareCardStudioView: View {
             .frame(width: 64)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("\(m.label) colour")
-        .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+
+    private func colourRoleRow(_ title: String, color: Binding<Color?>, allowClear: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+                Spacer()
+                if allowClear, color.wrappedValue != nil {
+                    Button("Design") { color.wrappedValue = nil }
+                        .font(.caption.weight(.semibold))
+                }
+            }
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(Array(SharePalette.swatches.enumerated()), id: \.offset) { _, swatch in
+                        let selected = color.wrappedValue.map { colorsEqual($0, swatch) } ?? false
+                        Button {
+                            color.wrappedValue = swatch
+                            if title == "Background" { palettePresetLabel = "Custom" }
+                        } label: {
+                            Circle()
+                                .fill(swatch)
+                                .frame(width: 28, height: 28)
+                                .overlay(Circle().stroke(selected ? BeUmmatiShare.brandRed : Color.primary.opacity(0.15), lineWidth: selected ? 2 : 1))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+    }
+
+    private func colorsEqual(_ a: Color, _ b: Color) -> Bool {
+        let ua = UIColor(a), ub = UIColor(b)
+        var ar: CGFloat = 0, ag: CGFloat = 0, ab: CGFloat = 0, aa: CGFloat = 0
+        var br: CGFloat = 0, bg: CGFloat = 0, bb: CGFloat = 0, ba: CGFloat = 0
+        ua.getRed(&ar, green: &ag, blue: &ab, alpha: &aa)
+        ub.getRed(&br, green: &bg, blue: &bb, alpha: &ba)
+        return abs(ar - br) < 0.02 && abs(ag - bg) < 0.02 && abs(ab - bb) < 0.02
+    }
+
+    private static func storeOptionalColor(_ color: Color?, key: String) {
+        guard let color else {
+            UserDefaults.standard.removeObject(forKey: key)
+            return
+        }
+        let ui = UIColor(color)
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        ui.getRed(&r, green: &g, blue: &b, alpha: &a)
+        UserDefaults.standard.set([Double(r), Double(g), Double(b), Double(a)], forKey: key)
+    }
+
+    private static func loadOptionalColor(key: String) -> Color? {
+        guard let arr = UserDefaults.standard.array(forKey: key) as? [Double], arr.count == 4 else { return nil }
+        return Color(.sRGB, red: arr[0], green: arr[1], blue: arr[2], opacity: arr[3])
     }
 
     private func cropEditor(label: String, text: Binding<String>, full: String, reset: @escaping () -> Void) -> some View {
@@ -568,17 +692,15 @@ struct ShareCardStudioView: View {
             showUrdu: includeUrdu && hasUrdu,
             showBrand: includeBrand,
             showSlogan: false,
-            showReference: includeReference
+            showReference: includeReference,
+            palette: palette
         )
         // Logical 1080×1350 → export at native IG 4:5 resolution
         let renderer = ImageRenderer(content: card)
         renderer.scale = 1
-        if let ui = renderer.uiImage {
-            let graded = colorMood.apply(to: ui)
-            if let data = graded.pngData() {
-                payload = ShareablePNG(data: data)
-                preview = graded
-            }
+        if let ui = renderer.uiImage, let data = ui.pngData() {
+            payload = ShareablePNG(data: data)
+            preview = ui
         }
         preparing = false
     }

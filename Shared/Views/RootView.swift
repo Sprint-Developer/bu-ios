@@ -253,7 +253,7 @@ struct MoreSettings: View {
                 NavigationLink {
                     OfflinePackView()
                 } label: {
-                    Label("Offline pack", systemImage: "arrow.down.circle")
+                    Label("Offline data", systemImage: "arrow.down.circle")
                 }
             }
 

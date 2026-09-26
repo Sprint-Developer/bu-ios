@@ -9,14 +9,19 @@ struct DuasLibraryView: View {
         return HisnAlMuslim.categories.filter {
             $0.titleEn.lowercased().contains(q)
                 || $0.titleAr.contains(query)
-                || $0.duas.contains { $0.english.lowercased().contains(q) || $0.arabic.contains(query) }
+                || $0.titleUr.contains(query)
+                || $0.duas.contains {
+                    $0.english.lowercased().contains(q)
+                        || $0.urdu.contains(query)
+                        || $0.arabic.contains(query)
+                }
         }
     }
 
     var body: some View {
         List {
             Section {
-                Text("\(HisnAlMuslim.allDuas.count) authentic duas & adhkar from Hisn al-Muslim, each with a classical reference. Unsourced lines are not included.")
+                Text("\(HisnAlMuslim.allDuas.count) authentic duas & adhkar from Hisn al-Muslim, each with a classical reference. Unsourced lines are not included. Urdu is included where available in the catalog.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -71,6 +76,12 @@ struct DuasLibraryView: View {
                             VStack(alignment: .leading, spacing: 3) {
                                 Text(cat.titleEn)
                                     .font(BeUmmatiTheme.heading(16))
+                                if !cat.titleUr.isEmpty {
+                                    Text(cat.titleUr)
+                                        .font(BeUmmatiTheme.ui(13))
+                                        .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                                        .environment(\.layoutDirection, .rightToLeft)
+                                }
                                 Text(cat.titleAr)
                                     .font(BeUmmatiTheme.ui(13))
                                     .foregroundStyle(BeUmmatiTheme.inkSecondary)
@@ -106,10 +117,20 @@ struct DuasLibraryView: View {
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .environment(\.layoutDirection, .rightToLeft)
                 .lineLimit(2)
-            Text(dua.english)
-                .font(BeUmmatiTheme.ui(13))
-                .foregroundStyle(BeUmmatiTheme.inkSecondary)
-                .lineLimit(2)
+            if !dua.urdu.isEmpty {
+                Text(dua.urdu)
+                    .font(BeUmmatiTheme.ui(13))
+                    .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                    .multilineTextAlignment(.trailing)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .environment(\.layoutDirection, .rightToLeft)
+                    .lineLimit(2)
+            } else {
+                Text(dua.english)
+                    .font(BeUmmatiTheme.ui(13))
+                    .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                    .lineLimit(2)
+            }
         }
         .padding(.vertical, 4)
     }
@@ -138,10 +159,20 @@ struct DuaShortcutListView: View {
                                     .frame(maxWidth: .infinity, alignment: .trailing)
                                     .environment(\.layoutDirection, .rightToLeft)
                                     .lineLimit(3)
-                                Text(dua.english)
-                                    .font(BeUmmatiTheme.ui(13))
-                                    .foregroundStyle(BeUmmatiTheme.inkSecondary)
-                                    .lineLimit(2)
+                                if !dua.urdu.isEmpty {
+                                    Text(dua.urdu)
+                                        .font(BeUmmatiTheme.ui(13))
+                                        .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                                        .multilineTextAlignment(.trailing)
+                                        .frame(maxWidth: .infinity, alignment: .trailing)
+                                        .environment(\.layoutDirection, .rightToLeft)
+                                        .lineLimit(2)
+                                } else {
+                                    Text(dua.english)
+                                        .font(BeUmmatiTheme.ui(13))
+                                        .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                                        .lineLimit(2)
+                                }
                             }
                             .padding(.vertical, 4)
                         }
@@ -166,6 +197,13 @@ struct DuaCategoryView: View {
                     .font(BeUmmatiTheme.heading(20))
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .environment(\.layoutDirection, .rightToLeft)
+                if !category.titleUr.isEmpty {
+                    Text(category.titleUr)
+                        .font(BeUmmatiTheme.ui(15))
+                        .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .environment(\.layoutDirection, .rightToLeft)
+                }
             }
             ForEach(category.duas) { dua in
                 NavigationLink {
@@ -177,10 +215,20 @@ struct DuaCategoryView: View {
                             .multilineTextAlignment(.trailing)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .environment(\.layoutDirection, .rightToLeft)
-                        Text(dua.english)
-                            .font(BeUmmatiTheme.ui(14))
-                            .foregroundStyle(BeUmmatiTheme.inkSecondary)
-                            .lineLimit(3)
+                        if !dua.urdu.isEmpty {
+                            Text(dua.urdu)
+                                .font(BeUmmatiTheme.ui(14))
+                                .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                                .multilineTextAlignment(.trailing)
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .environment(\.layoutDirection, .rightToLeft)
+                                .lineLimit(3)
+                        } else {
+                            Text(dua.english)
+                                .font(BeUmmatiTheme.ui(14))
+                                .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                                .lineLimit(3)
+                        }
                         if dua.count > 1 {
                             Text("× \(dua.count)")
                                 .font(BeUmmatiTheme.ui(12, weight: .bold))
@@ -235,14 +283,7 @@ struct DuaDetailView: View {
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Meaning")
-                        .font(BeUmmatiTheme.ui(11, weight: .bold))
-                        .foregroundStyle(BeUmmatiTheme.inkSecondary)
-                    Text(dua.english)
-                        .font(reading.englishFont.font(size: reading.englishSize))
-                        .lineSpacing(4)
-                }
+                TripleText(arabic: "", english: dua.english, urdu: dua.urdu)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Reference")
@@ -286,12 +327,15 @@ struct DuaDetailView: View {
                         ref: dua.reference,
                         arabic: dua.arabic,
                         english: dua.english,
-                        urdu: ""
+                        urdu: dua.urdu
                     )
                     Button {
+                        let body = [dua.arabic, dua.english, dua.urdu, "— \(dua.reference)"]
+                            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+                            .joined(separator: "\n\n")
                         notes.add(
                             title: categoryTitle.isEmpty ? "Dua" : categoryTitle,
-                            body: "\(dua.arabic)\n\n\(dua.english)\n\n— \(dua.reference)",
+                            body: body,
                             ref: dua.reference,
                             linkKind: "Dua"
                         )
@@ -307,7 +351,7 @@ struct DuaDetailView: View {
                             title: categoryTitle,
                             arabic: dua.arabic,
                             english: dua.english,
-                            urdu: ""
+                            urdu: dua.urdu
                         )
                     } label: {
                         Image(systemName: bookmarks.isBookmarked(kind: "Dua", ref: dua.id) ? "bookmark.fill" : "bookmark")

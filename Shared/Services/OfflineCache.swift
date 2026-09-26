@@ -143,6 +143,39 @@ actor OfflineCache {
         _ = dir
     }
 
+    /// Remove Qur’an text cache only (keep tafsir / hadith files in the same folder).
+    func clearQuran() {
+        try? FileManager.default.removeItem(at: chaptersURL())
+        guard let files = try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil) else { return }
+        for url in files {
+            let name = url.lastPathComponent
+            if name.hasPrefix("surah-") {
+                try? FileManager.default.removeItem(at: url)
+            }
+        }
+    }
+
+    func hadithURL(edition: String, section: Int) -> URL {
+        dir.appendingPathComponent("hadith_\(edition)_\(section).json")
+    }
+
+    func saveHadithData(_ data: Data, edition: String, section: Int) {
+        try? data.write(to: hadithURL(edition: edition, section: section), options: .atomic)
+    }
+
+    func loadHadithData(edition: String, section: Int) -> Data? {
+        let url = hadithURL(edition: edition, section: section)
+        guard FileManager.default.fileExists(atPath: url.path) else { return nil }
+        return try? Data(contentsOf: url)
+    }
+
+    func clearHadith() {
+        guard let files = try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil) else { return }
+        for url in files where url.lastPathComponent.hasPrefix("hadith_") {
+            try? FileManager.default.removeItem(at: url)
+        }
+    }
+
     func saveTafsirUrdu(surah: Int, entries: [TafsirEntry]) {
         let rows: [[String: Any]] = entries.map {
             ["surah": $0.surah, "ayah": $0.ayah, "text": $0.text]

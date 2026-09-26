@@ -94,6 +94,11 @@ enum ShareCardStyle: String, CaseIterable, Identifiable {
     case contourTide
     case risoDuo
     case nightGirih
+    case keystone
+    case datum
+    case masthead
+    case cascade
+    case signal
 
     var id: String { rawValue }
 
@@ -114,6 +119,11 @@ enum ShareCardStyle: String, CaseIterable, Identifiable {
         case .contourTide: return "Contour"
         case .risoDuo: return "Riso"
         case .nightGirih: return "Girih"
+        case .keystone: return "Keystone"
+        case .datum: return "Datum"
+        case .masthead: return "Masthead"
+        case .cascade: return "Cascade"
+        case .signal: return "Signal"
         }
     }
 
@@ -134,6 +144,11 @@ enum ShareCardStyle: String, CaseIterable, Identifiable {
         case .contourTide: return "Topographic petrol lines"
         case .risoDuo: return "Cobalt + tangerine print"
         case .nightGirih: return "Midnight geometry constellation"
+        case .keystone: return "Header strip · accent rail · info panel"
+        case .datum: return "Side rail · numbered translation stack"
+        case .masthead: return "Editorial rules · display reference"
+        case .cascade: return "Stepped colour bands · layered read"
+        case .signal: return "Badge · bold bar · poster hierarchy"
         }
     }
 
@@ -155,6 +170,11 @@ enum ShareCardStyle: String, CaseIterable, Identifiable {
         case .contourTide: return [DQShare.color(0x041F25), DQShare.color(0x7FE0C4), DQShare.color(0xF2C879)]
         case .risoDuo: return [DQShare.color(0x2B3EE0), DQShare.color(0xFF5A36), DQShare.color(0xFAF7F0)]
         case .nightGirih: return [DQShare.color(0x060A18), DQShare.color(0xE0B95F), DQShare.color(0x9AA7C7)]
+        case .keystone: return [DQShare.color(0x12151A), DQShare.color(0xC9A24A), DQShare.color(0xE8E4DB)]
+        case .datum: return [DQShare.color(0x0E1A1F), DQShare.color(0x5EE0B5), DQShare.color(0xF2EDE1)]
+        case .masthead: return [DQShare.color(0xF7F4EE), DQShare.color(0x1A1A1A), DQShare.color(0x8B1E1E)]
+        case .cascade: return [DQShare.color(0x0B3D2E), DQShare.color(0xE7D7A8), DQShare.color(0x14543E)]
+        case .signal: return [DQShare.color(0x0A1628), DQShare.color(0xD4A017), DQShare.color(0xE8DCC8)]
         }
     }
 
@@ -406,6 +426,11 @@ struct DailyQuranShareCard: View {
             case .contourTide: contour
             case .risoDuo: riso
             case .nightGirih: girih
+            case .keystone: keystone
+            case .datum: datum
+            case .masthead: masthead
+            case .cascade: cascade
+            case .signal: signal
             }
 
             // Tint atmosphere toward the chosen background; keep ornaments + text colours.
@@ -1366,6 +1391,300 @@ struct DailyQuranShareCard: View {
                 }
             }
             .padding(.horizontal, 150)
+        }
+    }
+
+    // MARK: Keystone (infographic)
+
+    private var keystone: some View {
+        let ink = DQShare.color(0x12151A)
+        let bone = DQShare.color(0xE8E4DB)
+        let brass = DQShare.color(0xC9A24A)
+        let panel = DQShare.color(0x1A1F27)
+        return ZStack {
+            ink
+            VStack(spacing: 0) {
+                ZStack(alignment: .bottom) {
+                    DQShare.color(0x0A0C10).frame(height: 160)
+                    Rectangle().fill(brass).frame(height: 4)
+                    HStack {
+                        brandLine(brass)
+                        Spacer()
+                        if !ref.isEmpty {
+                            Text(ref.uppercased())
+                                .font(DQShare.sans(18, bold: true))
+                                .tracking(1)
+                                .foregroundStyle(ink)
+                                .padding(.horizontal, 18)
+                                .padding(.vertical, 12)
+                                .background(brass, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        }
+                    }
+                    .padding(.horizontal, 72)
+                    .padding(.bottom, 28)
+                }
+                HStack(alignment: .top, spacing: 20) {
+                    Rectangle().fill(brass).frame(width: 12)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 18, style: .continuous).fill(panel)
+                        centeredStack(arColor: bone, urColor: bone.opacity(0.82), enColor: brass, sep: brass, showSep: true, maxWidth: 820)
+                            .padding(36)
+                    }
+                }
+                .padding(.horizontal, 64)
+                .padding(.top, 56)
+                .frame(maxHeight: .infinity)
+                Text("KEYSTONE")
+                    .font(DQShare.sans(14, bold: true))
+                    .tracking(4)
+                    .foregroundStyle((palette.brand ?? brass).opacity(0.47))
+                    .padding(.bottom, 48)
+            }
+        }
+    }
+
+    // MARK: Datum (infographic)
+
+    private var datum: some View {
+        let deep = DQShare.color(0x0E1A1F)
+        let mint = DQShare.color(0x5EE0B5)
+        let bone = DQShare.color(0xF2EDE1)
+        let mute = DQShare.color(0x9BB0A8)
+        return ZStack(alignment: .leading) {
+            deep
+            HStack(spacing: 0) {
+                ZStack {
+                    DQShare.color(0x13262C)
+                    Rectangle().fill(mint).frame(width: 6).frame(maxWidth: .infinity, alignment: .trailing)
+                    Text(palette.brandText.uppercased())
+                        .font(DQShare.sans(18, bold: true))
+                        .tracking(3)
+                        .foregroundStyle(palette.brand ?? mint)
+                        .rotationEffect(.degrees(-90))
+                        .fixedSize()
+                }
+                .frame(width: 120)
+                VStack(alignment: .leading, spacing: 28) {
+                    if !ref.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(ref.uppercased())
+                                .font(DQShare.sans(20, bold: true))
+                                .tracking(2)
+                                .foregroundStyle(mint)
+                            Rectangle().fill(mint.opacity(0.63)).frame(width: 140, height: 3)
+                        }
+                        .padding(.top, 72)
+                    }
+                    Spacer(minLength: 20)
+                    if !ar.isEmpty {
+                        datumRow("01", mint) {
+                            Text(ar)
+                                .font(DQShare.uthmani(sz.ar))
+                                .foregroundStyle(palette.arabic ?? bone)
+                                .multilineTextAlignment(.trailing)
+                                .environment(\.layoutDirection, .rightToLeft)
+                                .minimumScaleFactor(0.65)
+                        }
+                    }
+                    if !en.isEmpty {
+                        datumRow("02", mute) {
+                            Text(en)
+                                .font(DQShare.serif(sz.en))
+                                .foregroundStyle(palette.english ?? bone)
+                                .multilineTextAlignment(.leading)
+                                .minimumScaleFactor(0.75)
+                        }
+                    }
+                    if !ur.isEmpty {
+                        datumRow("03", mute) {
+                            Text(ur)
+                                .font(DQShare.nastaliq(sz.ur))
+                                .foregroundStyle((palette.urdu ?? mute).opacity(0.92))
+                                .multilineTextAlignment(.trailing)
+                                .environment(\.layoutDirection, .rightToLeft)
+                                .minimumScaleFactor(0.7)
+                        }
+                    }
+                    Spacer(minLength: 40)
+                }
+                .padding(.leading, 48)
+                .padding(.trailing, 64)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            }
+        }
+    }
+
+    private func datumRow<Content: View>(_ num: String, _ accent: Color, @ViewBuilder content: () -> Content) -> some View {
+        HStack(alignment: .top, spacing: 20) {
+            VStack(spacing: 8) {
+                Circle().fill(accent).frame(width: 10, height: 10)
+                Text(num)
+                    .font(DQShare.sans(22, bold: true))
+                    .tracking(1)
+                    .foregroundStyle(accent)
+            }
+            .frame(width: 48)
+            content()
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    // MARK: Masthead (infographic)
+
+    private var masthead: some View {
+        let paper = DQShare.color(0xF7F4EE)
+        let ink = DQShare.color(0x1A1A1A)
+        let rule = DQShare.color(0x8B1E1E)
+        return ZStack {
+            paper
+            VStack(spacing: 0) {
+                brandLine(ink)
+                    .padding(.top, 64)
+                Rectangle().fill(ink).frame(height: 3).padding(.horizontal, 120).padding(.top, 18)
+                Rectangle().fill(rule).frame(height: 2).padding(.horizontal, 120).padding(.top, 6)
+                if !ref.isEmpty {
+                    Text(ref.uppercased())
+                        .font(DQShare.sans(34, bold: true))
+                        .tracking(1)
+                        .foregroundStyle(ink)
+                        .padding(.top, 36)
+                    Rectangle().fill(rule).frame(width: 80, height: 4).padding(.top, 14)
+                }
+                Spacer(minLength: 24)
+                centeredStack(arColor: ink, urColor: ink.opacity(0.78), enColor: ink, sep: rule, showSep: true, maxWidth: 820)
+                Spacer(minLength: 24)
+                Rectangle().fill(ink.opacity(0.63)).frame(height: 2).padding(.horizontal, 120)
+                Text("EDITORIAL SERIES")
+                    .font(DQShare.sans(14, bold: true))
+                    .tracking(4)
+                    .foregroundStyle(palette.brand ?? rule)
+                    .padding(.top, 22)
+                    .padding(.bottom, 56)
+            }
+            .padding(.horizontal, 48)
+        }
+    }
+
+    // MARK: Cascade (infographic)
+
+    private var cascade: some View {
+        let deep = DQShare.color(0x0B3D2E)
+        let mid = DQShare.color(0x14543E)
+        let cream = DQShare.color(0xE7D7A8)
+        let ink = DQShare.color(0x06231C)
+        return ZStack {
+            deep
+            VStack(spacing: 24) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous).fill(mid)
+                    if !ref.isEmpty {
+                        Text(ref.uppercased())
+                            .font(DQShare.sans(22, bold: true))
+                            .tracking(2)
+                            .foregroundStyle(cream)
+                    }
+                }
+                .frame(height: 120)
+                .padding(.horizontal, 48)
+
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous).fill(DQShare.color(0x0F4A38))
+                    if !ar.isEmpty {
+                        Text(ar)
+                            .font(DQShare.uthmani(sz.ar))
+                            .foregroundStyle(palette.arabic ?? cream)
+                            .multilineTextAlignment(.center)
+                            .minimumScaleFactor(0.65)
+                            .environment(\.layoutDirection, .rightToLeft)
+                            .padding(36)
+                    }
+                }
+                .frame(maxHeight: .infinity)
+                .padding(.horizontal, 72)
+
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous).fill(cream)
+                    if !en.isEmpty {
+                        Text(en)
+                            .font(DQShare.serif(sz.en))
+                            .foregroundStyle(palette.english ?? ink)
+                            .multilineTextAlignment(.center)
+                            .minimumScaleFactor(0.75)
+                            .padding(28)
+                    }
+                }
+                .frame(height: 250)
+                .padding(.horizontal, 96)
+
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous).fill(DQShare.color(0x0A3328))
+                    if !ur.isEmpty {
+                        Text(ur)
+                            .font(DQShare.nastaliq(sz.ur))
+                            .foregroundStyle((palette.urdu ?? cream).opacity(0.9))
+                            .multilineTextAlignment(.center)
+                            .minimumScaleFactor(0.7)
+                            .environment(\.layoutDirection, .rightToLeft)
+                            .padding(24)
+                    }
+                }
+                .frame(height: 170)
+                .padding(.horizontal, 120)
+
+                brandLine(cream.opacity(0.51))
+                    .padding(.bottom, 28)
+            }
+            .padding(.top, 56)
+        }
+    }
+
+    // MARK: Signal (infographic)
+
+    private var signal: some View {
+        let navy = DQShare.color(0x0A1628)
+        let sand = DQShare.color(0xE8DCC8)
+        let gold = DQShare.color(0xD4A017)
+        return ZStack(alignment: .leading) {
+            navy
+            Rectangle().fill(gold).frame(width: 28)
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(alignment: .top) {
+                    if !ref.isEmpty {
+                        ZStack {
+                            Circle().fill(gold).frame(width: 156, height: 156)
+                            Text(ref.uppercased())
+                                .font(DQShare.sans(14, bold: true))
+                                .tracking(0.5)
+                                .foregroundStyle(navy)
+                                .multilineTextAlignment(.center)
+                                .frame(width: 120)
+                        }
+                        .padding(.leading, 64)
+                        .padding(.top, 64)
+                    }
+                    Spacer()
+                    brandLine(sand)
+                        .padding(.trailing, 72)
+                        .padding(.top, 72)
+                }
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .fill(DQShare.color(0x122033))
+                    Rectangle().fill(gold).frame(width: 12)
+                    centeredStack(arColor: sand, urColor: sand.opacity(0.82), enColor: gold, sep: gold, showSep: true, maxWidth: 820)
+                        .padding(.leading, 36)
+                        .padding(32)
+                }
+                .padding(.horizontal, 56)
+                .padding(.top, 40)
+                .frame(maxHeight: .infinity)
+                Text("SIGNAL")
+                    .font(DQShare.sans(14, bold: true))
+                    .tracking(4)
+                    .foregroundStyle((palette.brand ?? gold).opacity(0.55))
+                    .padding(.leading, 88)
+                    .padding(.bottom, 48)
+            }
         }
     }
 

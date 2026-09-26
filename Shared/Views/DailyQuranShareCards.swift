@@ -277,7 +277,8 @@ private extension UIImage {
         return renderer.image { _ in
             draw(in: CGRect(origin: .zero, size: size))
             color.setFill()
-            UIRectFillUsingBlendMode(CGRect(origin: .zero, size: size), .softLight)
+            // Overlay is widely available (incl. Mac Catalyst); softLight skips on some paths.
+            UIRectFillUsingBlendMode(CGRect(origin: .zero, size: size), .overlay)
         }
     }
 }

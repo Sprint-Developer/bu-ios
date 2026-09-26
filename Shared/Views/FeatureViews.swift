@@ -74,30 +74,56 @@ struct OfflinePackView: View {
     @State private var bytes: Int64 = 0
     @State private var status = ""
     @State private var busy = false
+    @State private var progress: Double = 0
+    @State private var downloadTask: Task<Void, Never>?
 
     /// Short, high-value pack — text only, typically under ~2–3 MB total.
     private let starter = [1, 18, 36, 55, 56, 67, 78, 112, 113, 114]
+    private let allSurahs = Array(1...114)
 
     var body: some View {
         List {
             Section {
-                Text("Saves Arabic + translations as text on this device. A full starter pack is usually a couple of megabytes — not audio.")
+                Text("Saves Arabic + English & Urdu translations as text on this device for fast / offline reading. Audio is separate.")
                     .font(.system(size: 13))
                     .foregroundStyle(.secondary)
                 LabeledContent("Cached size", value: Self.format(bytes))
-                LabeledContent("Surahs offline", value: "\(cached.count)")
+                LabeledContent("Surahs offline", value: "\(cached.count) / 114")
+                if busy {
+                    ProgressView(value: progress)
+                        .tint(Color(red: 0.15, green: 0.55, blue: 0.42))
+                }
             }
             Section("Actions") {
                 Button {
-                    Task { await download(starter) }
+                    startDownload(starter, label: "starter")
                 } label: {
-                    Label(busy ? "Downloading…" : "Download starter pack", systemImage: "arrow.down.circle")
+                    Label(busy ? "Downloading…" : "Download starter pack (10 surahs)", systemImage: "arrow.down.circle")
                 }
                 .disabled(busy)
+
+                Button {
+                    startDownload(allSurahs, label: "full Qur’an")
+                } label: {
+                    Label(busy ? "Downloading…" : "Download full Qur’an (114 surahs)", systemImage: "square.and.arrow.down.on.square")
+                }
+                .disabled(busy)
+
+                if busy {
+                    Button(role: .cancel) {
+                        downloadTask?.cancel()
+                        downloadTask = nil
+                        busy = false
+                        status = "Cancelled"
+                    } label: {
+                        Label("Cancel download", systemImage: "xmark.circle")
+                    }
+                }
 
                 if !cached.isEmpty {
                     Button(role: .destructive) {
                         Task {
+                            downloadTask?.cancel()
                             await OfflineCache.shared.clearAll()
                             await refresh()
                             status = "Cleared"
@@ -105,6 +131,7 @@ struct OfflinePackView: View {
                     } label: {
                         Label("Clear offline data", systemImage: "trash")
                     }
+                    .disabled(busy)
                 }
             }
             if !status.isEmpty {
@@ -127,6 +154,9 @@ struct OfflinePackView: View {
         }
         .navigationTitle("Offline pack")
         .task { await refresh() }
+        .onDisappear {
+            // Don't cancel mid-download if user navigates away — keep background work.
+        }
     }
 
     private func refresh() async {
@@ -134,19 +164,35 @@ struct OfflinePackView: View {
         bytes = await OfflineCache.shared.approximateBytes()
     }
 
-    private func download(_ ids: [Int]) async {
+    private func startDownload(_ ids: [Int], label: String) {
+        downloadTask?.cancel()
+        downloadTask = Task { await download(ids, label: label) }
+    }
+
+    private func download(_ ids: [Int], label: String) async {
         busy = true
-        defer { busy = false }
+        progress = 0
+        defer {
+            busy = false
+            progress = 0
+        }
         do {
             _ = try await QuranAPI.shared.chapters()
             var ok = 0
-            for id in ids {
-                status = "Downloading surah \(id)…"
+            for (index, id) in ids.enumerated() {
+                try Task.checkCancellation()
+                status = "Downloading \(label): surah \(id)…"
+                progress = Double(index) / Double(max(ids.count, 1))
                 _ = try await QuranAPI.shared.ayahs(chapter: id)
                 ok += 1
+                if ok % 5 == 0 { await refresh() }
             }
+            progress = 1
             await refresh()
             status = "Saved \(ok) surahs (\(Self.format(bytes)))"
+        } catch is CancellationError {
+            status = "Cancelled — \(cached.count) surahs kept"
+            await refresh()
         } catch {
             status = error.localizedDescription
             await refresh()

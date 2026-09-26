@@ -36,6 +36,7 @@ final class QuranAyahPlayer: ObservableObject {
     }
 
     func play(from ayah: QuranAyah, in siblings: [QuranAyah], autoAdvance: Bool = true) {
+        LectureAudioSession.shared.pause()
         stop()
         self.ayahs = siblings
         self.autoAdvance = autoAdvance
@@ -63,6 +64,7 @@ final class QuranAyahPlayer: ObservableObject {
     }
 
     func resume() {
+        LectureAudioSession.shared.pause()
         player?.play()
         state.playing = true
     }

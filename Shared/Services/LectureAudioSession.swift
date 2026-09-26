@@ -135,6 +135,7 @@ final class LectureAudioSession: ObservableObject {
         fallbackTranscript: String = "",
         enqueueRestOfSeries: Bool = true
     ) {
+        QuranAyahPlayer.shared.pause()
         let item = NowPlaying(
             seriesID: series.id,
             chapterID: chapter.id,
@@ -218,6 +219,7 @@ final class LectureAudioSession: ObservableObject {
         if player.rate > 0 {
             pause()
         } else {
+            QuranAyahPlayer.shared.pause()
             player.rate = rate
             isPlaying = true
             updateIdleTimer()
@@ -264,13 +266,15 @@ final class LectureAudioSession: ObservableObject {
         if let mins = option.minutes {
             let end = Date().addingTimeInterval(TimeInterval(mins * 60))
             sleepEndsAt = end
-            sleepTimer = Timer.scheduledTimer(withTimeInterval: TimeInterval(mins * 60), repeats: false) { [weak self] _ in
+            let timer = Timer(timeInterval: TimeInterval(mins * 60), repeats: false) { [weak self] _ in
                 Task { @MainActor in
                     self?.pause()
                     self?.sleep = .off
                     self?.sleepEndsAt = nil
                 }
             }
+            RunLoop.main.add(timer, forMode: .common)
+            sleepTimer = timer
         }
         // endOfLecture handled in itemDidFinish
     }
@@ -323,9 +327,14 @@ final class LectureAudioSession: ObservableObject {
         setSyncOffset(0)
     }
 
-    /// Keep the phone screen awake while a lecture is playing (incl. sleep → end of lecture).
+    /// Keep the phone/iPad screen awake while a lecture is playing (incl. sleep → end of lecture).
+    /// No-op on Mac Catalyst where the system idle timer does not apply the same way.
     private func updateIdleTimer() {
+        #if targetEnvironment(macCatalyst)
+        // Mac stays awake based on system prefs; don't fight the OS.
+        #else
         UIApplication.shared.isIdleTimerDisabled = isPlaying
+        #endif
     }
 
     private static func syncDefaultsKey(for seriesID: String) -> String {
@@ -674,7 +683,14 @@ final class LectureAudioSession: ObservableObject {
         remoteConfigured = true
         let cc = MPRemoteCommandCenter.shared()
         cc.playCommand.addTarget { [weak self] _ in
-            Task { @MainActor in self?.player?.rate = self?.rate ?? 1; self?.isPlaying = true; self?.updateIdleTimer(); self?.updateNowPlayingInfo() }
+            Task { @MainActor in
+                guard let self, let player = self.player else { return }
+                QuranAyahPlayer.shared.pause()
+                player.rate = self.rate
+                self.isPlaying = true
+                self.updateIdleTimer()
+                self.updateNowPlayingInfo()
+            }
             return .success
         }
         cc.pauseCommand.addTarget { [weak self] _ in

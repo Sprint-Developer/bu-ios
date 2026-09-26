@@ -191,6 +191,15 @@ struct HifzView: View {
                 Text("Listen, then reveal")
                     .font(BeUmmatiTheme.ui(15, weight: .medium))
                     .foregroundStyle(BeUmmatiTheme.inkSecondary)
+                Button {
+                    LectureAudioSession.shared.pause()
+                    QuranAyahPlayer.shared.play(from: ayah, in: [ayah], autoAdvance: false)
+                } label: {
+                    Label("Play ayah", systemImage: "play.circle.fill")
+                        .font(BeUmmatiTheme.ui(14, weight: .semibold))
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(BeUmmatiTheme.teal)
             } else {
                 Text("Recall the ayah…")
                     .font(BeUmmatiTheme.ui(15, weight: .medium))
@@ -225,7 +234,8 @@ struct HifzView: View {
                     guard let key = reviewKey else { return }
                     store.recordReview(key: key, remembered: true)
                     revealed = false
-                    advanceAfterReview()
+                    // dueToday shrank in place — stay on same index (next item slid here).
+                    clampReviewIndex()
                 } label: {
                     Text("Remembered")
                         .font(BeUmmatiTheme.ui(14, weight: .semibold))
@@ -315,6 +325,16 @@ struct HifzView: View {
     private func advanceAfterReview() {
         if queueIndex < store.dueToday.count - 1 {
             queueIndex += 1
+        } else {
+            clampReviewIndex()
+        }
+    }
+
+    private func clampReviewIndex() {
+        if store.dueToday.isEmpty {
+            queueIndex = 0
+        } else {
+            queueIndex = min(queueIndex, store.dueToday.count - 1)
         }
     }
 
@@ -325,6 +345,7 @@ struct HifzView: View {
     private func loadReview() async {
         guard let key = reviewKey else {
             reviewAyah = nil
+            QuranAyahPlayer.shared.stop()
             return
         }
         revealed = false
@@ -332,7 +353,12 @@ struct HifzView: View {
         loadError = nil
         defer { reviewLoading = false }
         do {
-            reviewAyah = try await QuranAPI.shared.verse(key: key)
+            let ayah = try await QuranAPI.shared.verse(key: key)
+            reviewAyah = ayah
+            if store.quizMode == .audioOnly {
+                LectureAudioSession.shared.pause()
+                QuranAyahPlayer.shared.play(from: ayah, in: [ayah], autoAdvance: false)
+            }
         } catch {
             reviewAyah = nil
             loadError = "Couldn’t load \(key). Check connection or offline pack."

@@ -5,10 +5,31 @@ actor OfflineCache {
     static let shared = OfflineCache()
 
     private var dir: URL {
-        let base = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        let d = base.appendingPathComponent("nur-offline", isDirectory: true)
+        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        let d = base.appendingPathComponent("beummati-offline", isDirectory: true)
         try? FileManager.default.createDirectory(at: d, withIntermediateDirectories: true)
+        migrateLegacyCacheIfNeeded(to: d)
         return d
+    }
+
+    /// Older builds wrote under Caches (`nur-offline`); move once so iOS doesn’t purge packs.
+    private func migrateLegacyCacheIfNeeded(to dest: URL) {
+        let flag = dest.appendingPathComponent(".migrated-from-caches")
+        guard !FileManager.default.fileExists(atPath: flag.path) else { return }
+        let legacy = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("nur-offline", isDirectory: true)
+        if FileManager.default.fileExists(atPath: legacy.path) {
+            if let files = try? FileManager.default.contentsOfDirectory(at: legacy, includingPropertiesForKeys: nil) {
+                for f in files {
+                    let target = dest.appendingPathComponent(f.lastPathComponent)
+                    if !FileManager.default.fileExists(atPath: target.path) {
+                        try? FileManager.default.copyItem(at: f, to: target)
+                    }
+                }
+            }
+            try? FileManager.default.removeItem(at: legacy)
+        }
+        FileManager.default.createFile(atPath: flag.path, contents: Data(), attributes: nil)
     }
 
     func chaptersURL() -> URL { dir.appendingPathComponent("chapters.json") }
@@ -80,21 +101,41 @@ actor OfflineCache {
     }
 
     func hasSurah(_ id: Int) -> Bool {
-        FileManager.default.fileExists(atPath: surahURL(id).path)
+        if FileManager.default.fileExists(atPath: surahURL(id).path) { return true }
+        // Translation-keyed files: surah-1-en85-ur54.json
+        guard let files = try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil) else {
+            return false
+        }
+        let prefix = "surah-\(id)"
+        return files.contains { url in
+            let name = url.deletingPathExtension().lastPathComponent
+            return name == prefix || name.hasPrefix(prefix + "-")
+        }
     }
 
     func cachedSurahIDs() -> [Int] {
-        (try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil))?
+        let ids = (try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil))?
             .compactMap { url -> Int? in
                 let name = url.deletingPathExtension().lastPathComponent
                 guard name.hasPrefix("surah-") else { return nil }
-                return Int(name.replacingOccurrences(of: "surah-", with: ""))
-            }
-            .sorted() ?? []
+                let rest = name.dropFirst("surah-".count)
+                // "18" or "18-en85-ur54"
+                guard let head = rest.split(separator: "-").first, let id = Int(head) else { return nil }
+                return id
+            } ?? []
+        return Array(Set(ids)).sorted()
     }
 
     func removeSurah(_ id: Int) {
         try? FileManager.default.removeItem(at: surahURL(id))
+        guard let files = try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil) else { return }
+        let prefix = "surah-\(id)"
+        for url in files {
+            let name = url.deletingPathExtension().lastPathComponent
+            if name == prefix || name.hasPrefix(prefix + "-") {
+                try? FileManager.default.removeItem(at: url)
+            }
+        }
     }
 
     func clearAll() {

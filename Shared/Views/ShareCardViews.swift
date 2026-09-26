@@ -148,6 +148,7 @@ struct ShareCardStudioView: View {
     @State private var payload: ShareablePNG?
     @State private var preview: UIImage?
     @State private var preparing = false
+    @State private var renderToken = 0
 
     private var hasArabic: Bool { !arabic.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
     private var hasEnglish: Bool { !english.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
@@ -389,18 +390,18 @@ struct ShareCardStudioView: View {
                 cropUrdu = urdu
                 render()
             }
-            .onChange(of: activeMode) { _, _ in render() }
-            .onChange(of: style) { _, _ in render() }
-            .onChange(of: colorMood) { _, _ in render() }
-            .onChange(of: includeArabic) { _, _ in render() }
-            .onChange(of: includeEnglish) { _, _ in render() }
-            .onChange(of: includeUrdu) { _, _ in render() }
-            .onChange(of: includeReference) { _, _ in render() }
-            .onChange(of: includeBrand) { _, _ in render() }
-            .onChange(of: includeTitle) { _, _ in render() }
-            .onChange(of: cropArabic) { _, _ in render() }
-            .onChange(of: cropEnglish) { _, _ in render() }
-            .onChange(of: cropUrdu) { _, _ in render() }
+            .onChange(of: activeMode) { _, _ in scheduleRender(immediate: true) }
+            .onChange(of: style) { _, _ in scheduleRender(immediate: true) }
+            .onChange(of: colorMood) { _, _ in scheduleRender(immediate: true) }
+            .onChange(of: includeArabic) { _, _ in scheduleRender(immediate: true) }
+            .onChange(of: includeEnglish) { _, _ in scheduleRender(immediate: true) }
+            .onChange(of: includeUrdu) { _, _ in scheduleRender(immediate: true) }
+            .onChange(of: includeReference) { _, _ in scheduleRender(immediate: true) }
+            .onChange(of: includeBrand) { _, _ in scheduleRender(immediate: true) }
+            .onChange(of: includeTitle) { _, _ in scheduleRender(immediate: true) }
+            .onChange(of: cropArabic) { _, _ in scheduleRender() }
+            .onChange(of: cropEnglish) { _, _ in scheduleRender() }
+            .onChange(of: cropUrdu) { _, _ in scheduleRender() }
         }
     }
 
@@ -529,6 +530,21 @@ struct ShareCardStudioView: View {
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
                         .stroke(Color.primary.opacity(0.08), lineWidth: 1)
                 )
+        }
+    }
+
+    @MainActor
+    private func scheduleRender(immediate: Bool = false) {
+        renderToken &+= 1
+        let token = renderToken
+        if immediate {
+            render()
+            return
+        }
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 350_000_000)
+            guard token == renderToken else { return }
+            render()
         }
     }
 

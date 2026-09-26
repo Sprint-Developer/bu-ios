@@ -732,9 +732,10 @@ struct DailyQuranShareCard: View {
         let seal = DQShare.color(0xB23A2E)
         return ZStack {
             paper
-            Circle().fill(DQShare.color(0x2B3A67, alpha: 0.9)).frame(width: 1040, height: 1040).position(x: 820, y: 980)
-            Circle().fill(DQShare.color(0x2B3A67, alpha: 0.4)).frame(width: 680, height: 680).position(x: 700, y: 1100)
-            Circle().fill(DQShare.color(0x7E8CB5, alpha: 0.16)).frame(width: 560, height: 560).position(x: 900, y: 850)
+            // Soft indigo blooms — light enough that dark ink stays readable over them.
+            Circle().fill(DQShare.color(0x2B3A67, alpha: 0.18)).frame(width: 1040, height: 1040).position(x: 820, y: 980)
+            Circle().fill(DQShare.color(0x2B3A67, alpha: 0.10)).frame(width: 680, height: 680).position(x: 700, y: 1100)
+            Circle().fill(DQShare.color(0x7E8CB5, alpha: 0.12)).frame(width: 560, height: 560).position(x: 900, y: 850)
 
             VStack(alignment: .trailing, spacing: 28) {
                 if !ar.isEmpty {
@@ -766,7 +767,7 @@ struct DailyQuranShareCard: View {
             if !en.isEmpty {
                 Text(en)
                     .font(DQShare.serif(sz.en))
-                    .foregroundStyle(paper)
+                    .foregroundStyle(ink.opacity(0.92))
                     .multilineTextAlignment(.leading)
                     .lineSpacing(6)
                     .minimumScaleFactor(0.75)
@@ -789,7 +790,7 @@ struct DailyQuranShareCard: View {
                 Text(ref.uppercased())
                     .font(DQShare.sans(18, bold: true))
                     .tracking(2)
-                    .foregroundStyle(paper.opacity(0.85))
+                    .foregroundStyle(ink.opacity(0.55))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
                     .padding(.trailing, 80)
                     .padding(.bottom, 80)
